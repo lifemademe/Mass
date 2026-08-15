@@ -5,6 +5,10 @@ import type { MassRecord } from './MassLedger.js';
 import { SlimePawn, visualRadiusForMass } from './SlimePawn.js';
 import { getSlimeGameContext } from './SlimeRuntime.js';
 
+const PIECE_RETURN_SPEED = 5.5;
+const PIECE_RETURN_HOP_HEIGHT = 0.28;
+const PIECE_RETURN_HOP_RATE = 8;
+
 function makeStoneMaterial(): THREE.MeshStandardMaterial {
   return new THREE.MeshStandardMaterial({
     color: 0x26392f,
@@ -46,6 +50,9 @@ export class PrototypeBlockNode extends ENGINE.MeshNode {
 export class SlimeAnchorNode extends ENGINE.MeshNode {
   @ENGINE.property({ type: 'number', category: 'Anchor', min: 2, max: 20, step: 0.25 })
   public activationRadius = 8;
+
+  @ENGINE.property({ type: 'number', category: 'Anchor', min: 0, max: 8, step: 0.05 })
+  public preferredTetherLength = 0;
 
   private highlighted = false;
   private valid = false;
@@ -283,7 +290,7 @@ export class SlimePieceNode extends ENGINE.SceneNode {
   private awakened = false;
   private elapsed = 0;
   private hopPhase = 0;
-  private groundY = 0.34;
+  private readonly returnPosition = new THREE.Vector3();
 
   constructor() {
     super();
@@ -320,7 +327,8 @@ export class SlimePieceNode extends ENGINE.SceneNode {
   public override beginPlay(): boolean {
     this.visual = this.getNode(ENGINE.MeshNode) ?? this.visual;
     if (!super.beginPlay()) return false;
-    this.groundY = Math.max(0.34, this.position.y);
+    this.returnPosition.copy(this.position);
+    this.returnPosition.z = 0;
     getSlimeGameContext(this.getWorld())?.registerPiece(this);
     return true;
   }
@@ -339,6 +347,10 @@ export class SlimePieceNode extends ENGINE.SceneNode {
   }
 
   public awaken(): void {
+    if (!this.awakened) {
+      this.returnPosition.copy(this.position);
+      this.returnPosition.z = 0;
+    }
     this.awakened = true;
     this.hopPhase = 0;
   }
@@ -357,15 +369,20 @@ export class SlimePieceNode extends ENGINE.SceneNode {
     if (!this.awakened || !context?.canPiecesFollow() || !pawn) return;
 
     const target = pawn.getWorldPosition();
-    const delta = target.clone().sub(this.getWorldPosition());
-    delta.z = 0;
-    if (delta.length() <= pawn.getBodyRadius() + 0.5) {
+    target.z = 0;
+    const delta = target.clone().sub(this.returnPosition);
+    const distance = delta.length();
+    const reunionDistance = pawn.getBodyRadius() + visualRadiusForMass(this.getMass()) * 0.92 + 0.2;
+    if (distance <= reunionDistance) {
       context.reunitePiece(this);
       return;
     }
-    this.hopPhase += deltaTime * 6;
-    this.position.x += Math.sign(delta.x) * Math.min(3.2 * deltaTime, Math.abs(delta.x));
-    this.position.y = this.groundY + Math.max(0, Math.sin(this.hopPhase)) * 0.42;
-    this.position.z = 0;
+
+    const step = Math.min(PIECE_RETURN_SPEED * deltaTime, distance);
+    this.returnPosition.addScaledVector(delta, step / distance);
+    this.hopPhase += deltaTime * PIECE_RETURN_HOP_RATE;
+    const hop = Math.max(0, Math.sin(this.hopPhase)) * Math.min(PIECE_RETURN_HOP_HEIGHT, distance * 0.12);
+    this.position.copy(this.returnPosition);
+    this.position.y += hop;
   }
 }

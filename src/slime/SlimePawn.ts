@@ -61,6 +61,7 @@ export class SlimePawn extends ENGINE.Pawn {
 
   private aimedAnchor: SlimeAnchorNode | null = null;
   private tetherAnchor: SlimeAnchorNode | null = null;
+  private tetherLength = 0;
   private senseTarget: SlimePieceNode | null = null;
   private aimPoint = new THREE.Vector3(1, 1, 0);
   private controlledMass = 100;
@@ -190,6 +191,10 @@ export class SlimePawn extends ENGINE.Pawn {
     return this.tetherAnchor?.getWorldPosition().clone() ?? null;
   }
 
+  public getTetherLength(): number {
+    return this.tetherLength > 0 ? this.tetherLength : this.getStretchRange();
+  }
+
   public setAimWorldPoint(point: THREE.Vector3): void {
     this.aimPoint.copy(point);
     const context = getSlimeGameContext(this.getWorld());
@@ -210,6 +215,13 @@ export class SlimePawn extends ENGINE.Pawn {
     ) ?? null;
     if (!anchor) return;
     this.tetherAnchor = anchor;
+    const targetLength = anchor.preferredTetherLength > 0
+      ? anchor.preferredTetherLength
+      : this.movementSettings.swingTetherLength;
+    this.tetherLength = Math.min(
+      anchor.getWorldPosition().distanceTo(this.getWorldPosition()),
+      targetLength,
+    );
     anchor.setHighlighted(true, true);
     this.tetherVisual.visible = true;
     context?.setPhase('feed');
@@ -231,6 +243,7 @@ export class SlimePawn extends ENGINE.Pawn {
     }
     this.tetherAnchor.setHighlighted(false, false);
     this.tetherAnchor = null;
+    this.tetherLength = 0;
     this.tetherVisual.visible = false;
   }
 

@@ -153,6 +153,7 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
   }
 
   public senseNextPiece(): SlimePieceNode | null {
+    if (!this.gatesOpen) return null;
     const candidates = [...this.pieces].filter((piece) => piece.getRecordId().length > 0);
     if (candidates.length === 0) return null;
     const origin = this.pawn?.getWorldPosition() ?? new THREE.Vector3();
@@ -160,7 +161,7 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     this.sensedIndex = (this.sensedIndex + 1) % candidates.length;
     const piece = candidates[this.sensedIndex];
     piece.awaken();
-    if (this.gatesOpen) this.setPhase('sense');
+    this.setPhase('sense');
     return piece;
   }
 
@@ -261,6 +262,7 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     addRoot(SlimeAnchorNode.create({ name: 'Pit Growth', position: new THREE.Vector3(0.5, 4.5, 0) }));
     const finalAnchor = SlimeAnchorNode.create({ name: 'Final High Growth', position: new THREE.Vector3(25, 8, 0) });
     finalAnchor.activationRadius = 10;
+    finalAnchor.preferredTetherLength = 2.2;
     addRoot(finalAnchor);
 
     addRoot(BiomassPickupNode.create({ name: 'Biomass +40', position: new THREE.Vector3(4.6, 0.7, 0) }));

@@ -4,7 +4,7 @@ import * as THREE from 'three';
 export interface SlimeMovementHost {
   getMoveSpeed(): number;
   getTetherAnchorPosition(): THREE.Vector3 | null;
-  getStretchRange(): number;
+  getTetherLength(): number;
   getMovementSettings(): SlimeMovementSettingsNode;
 }
 
@@ -25,6 +25,9 @@ export class SlimeMovementSettingsNode extends ENGINE.SceneNode {
   @ENGINE.property({ type: 'number', category: 'Movement', min: 0, max: 1, step: 0.05 })
   public airControl = 0.7;
 
+  @ENGINE.property({ type: 'number', category: 'Movement', min: 0, max: 30, step: 0.25 })
+  public airDrag = 3;
+
   @ENGINE.property({ type: 'number', category: 'Movement', min: 1, max: 100, step: 1 })
   public gravity = 38;
 
@@ -32,7 +35,19 @@ export class SlimeMovementSettingsNode extends ENGINE.SceneNode {
   public maxFallSpeed = 30;
 
   @ENGINE.property({ type: 'number', category: 'Stretch', min: 1, max: 100, step: 1 })
-  public tetherPull = 32;
+  public tetherPull = 64;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 2, max: 8, step: 0.05 })
+  public swingTetherLength = 4;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 100, step: 1 })
+  public tetherSpringStrength = 34;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 20, step: 0.25 })
+  public tetherRadialDamping = 8;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 1, max: 20, step: 0.25 })
+  public maxTetherReelSpeed = 7;
 
   @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 60, step: 1 })
   public swingAcceleration = 18;
@@ -94,28 +109,50 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
 
     let vx = sync.velocity.x;
     let vy = ENGINE.getVerticalVelocity(sync);
+    const anchor = host.getTetherAnchorPosition();
     const targetX = proposedMove.velocity.x * host.getMoveSpeed();
-    const control = wasGrounded ? 1 : settings.airControl;
-    vx = moveToward(vx, targetX, settings.acceleration * control * dt);
+    if (!anchor) {
+      const hasHorizontalInput = Math.abs(inputX) > 0.01;
+      const horizontalRate = hasHorizontalInput
+        ? settings.acceleration * (wasGrounded ? 1 : settings.airControl)
+        : wasGrounded ? settings.acceleration : settings.airDrag;
+      vx = moveToward(vx, targetX, horizontalRate * dt);
+    }
     vy = Math.max(vy - settings.gravity * dt, -settings.maxFallSpeed);
 
-    const anchor = host.getTetherAnchorPosition();
     if (anchor) {
       const toAnchor = anchor.clone().sub(sync.position);
       const distance = Math.max(toAnchor.length(), 0.001);
       const direction = toAnchor.multiplyScalar(1 / distance);
-      const tangent = new THREE.Vector3(-direction.y, direction.x, 0);
-      const range = host.getStretchRange();
-      const extension = Math.max(0, distance - range);
-      const pull = settings.tetherPull + extension * 50;
+      const tangent = new THREE.Vector3(direction.y, -direction.x, 0);
+      if (tangent.x < 0) tangent.negate();
+      const tetherLength = host.getTetherLength();
+      const extension = Math.max(0, distance - tetherLength);
+      const tautness = THREE.MathUtils.clamp(distance / tetherLength, 0, 1);
+      const pull = settings.tetherPull * tautness + extension * settings.tetherSpringStrength;
       vx += (direction.x * pull + tangent.x * inputX * settings.swingAcceleration) * dt;
       vy += (direction.y * pull + tangent.y * inputX * settings.swingAcceleration) * dt;
 
-      if (distance >= range) {
-        const radialSpeed = vx * direction.x + vy * direction.y;
-        if (radialSpeed < 0) {
-          vx -= direction.x * radialSpeed;
-          vy -= direction.y * radialSpeed;
+      // Remove rubber-band energy only along the tether. Tangential velocity is
+      // intentionally preserved so A/D still produces a lively, controllable swing.
+      const radialSpeed = vx * direction.x + vy * direction.y;
+      const dampedRadialSpeed = THREE.MathUtils.clamp(
+        radialSpeed * Math.exp(-settings.tetherRadialDamping * dt),
+        -settings.maxTetherReelSpeed,
+        settings.maxTetherReelSpeed,
+      );
+      const radialCorrection = dampedRadialSpeed - radialSpeed;
+      vx += direction.x * radialCorrection;
+      vy += direction.y * radialCorrection;
+
+      // Keep the tether at the length captured when it attached. Waiting until the
+      // exact limit allows a fast fall to overshoot by a full frame and slowly drift
+      // below the level, so begin enforcing it just before the rope becomes taut.
+      if (distance >= tetherLength - 0.05) {
+        const constrainedRadialSpeed = vx * direction.x + vy * direction.y;
+        if (constrainedRadialSpeed < 0) {
+          vx -= direction.x * constrainedRadialSpeed;
+          vy -= direction.y * constrainedRadialSpeed;
         }
       }
     }
@@ -124,7 +161,9 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
     const root = ENGINE.getPrimitiveRoot(mover);
     if (root && ENGINE.ensureCharacterController(mover, this.controllerOptions)) {
       const minimumDown = 0.002;
-      const requestedY = Math.min(vy * dt, -minimumDown);
+      // Preserve a tiny downward sweep only while falling/grounded. Applying it
+      // unconditionally discarded every upward velocity produced by a tether.
+      const requestedY = vy > 0 ? vy * dt : Math.min(vy * dt, -minimumDown);
       const delta = new THREE.Vector3(vx * dt, requestedY, 0);
       const moved = mover.getPhysicsEngine()!.computeCharacterMovement(
         mover,
@@ -148,6 +187,24 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
       });
     } else {
       sync.position.add(new THREE.Vector3(vx * dt, vy * dt, 0));
+    }
+
+    if (anchor) {
+      const lowestTetherY = anchor.y - host.getTetherLength();
+      const tetherWasAboveFloor = startData.syncState.position.y >= lowestTetherY - 0.05;
+      if (tetherWasAboveFloor && sync.position.y < lowestTetherY) {
+        sync.position.y = lowestTetherY;
+        if (vy < 0) vy = 0;
+        if (root) {
+          root.position.copy(sync.position);
+          root.setPhysicsTransformUpdateFlags({
+            sendPosition: true,
+            sendRotation: false,
+            receivePosition: false,
+            receiveRotation: false,
+          });
+        }
+      }
     }
 
     sync.rotation.set(0, 0, 0, 'YXZ');

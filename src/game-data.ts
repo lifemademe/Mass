@@ -936,6 +936,13 @@ export function registerMetadata(): void {
         "max": 1,
         "step": 0.05
       },
+      "airDrag": {
+        "type": "number",
+        "category": "Movement",
+        "min": 0,
+        "max": 30,
+        "step": 0.25
+      },
       "gravity": {
         "type": "number",
         "category": "Movement",
@@ -956,6 +963,34 @@ export function registerMetadata(): void {
         "min": 1,
         "max": 100,
         "step": 1
+      },
+      "swingTetherLength": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 2,
+        "max": 8,
+        "step": 0.05
+      },
+      "tetherSpringStrength": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      "tetherRadialDamping": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 20,
+        "step": 0.25
+      },
+      "maxTetherReelSpeed": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 1,
+        "max": 20,
+        "step": 0.25
       },
       "swingAcceleration": {
         "type": "number",
@@ -1018,6 +1053,13 @@ export function registerMetadata(): void {
         "min": 2,
         "max": 20,
         "step": 0.25
+      },
+      "preferredTetherLength": {
+        "type": "number",
+        "category": "Anchor",
+        "min": 0,
+        "max": 8,
+        "step": 0.05
       }
     });
 
