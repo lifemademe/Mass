@@ -212,6 +212,7 @@ export class SlimePawn extends ENGINE.Pawn {
     this.tetherAnchor = anchor;
     anchor.setHighlighted(true, true);
     this.tetherVisual.visible = true;
+    context?.setPhase('feed');
   }
 
   public releaseStretch(): void {

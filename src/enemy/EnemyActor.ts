@@ -27,7 +27,7 @@ const DEFAULT_DEATH_VFX = '@project/assets/vfx/spider-death-poof.vfx.json';
 /** Fallback if the death clip action never finishes (seconds). */
 const DEATH_CLIP_FALLBACK_SECONDS = 1.25;
 
-export interface EnemyActorOptions extends ENGINE.ActorOptions {
+export interface EnemyActorOptions extends ENGINE.SceneNodeOptions {
   health?: number;
   contactDamage?: number;
   moveSpeed?: number;
@@ -55,7 +55,7 @@ export interface EnemyActorOptions extends ENGINE.ActorOptions {
 }
 
 @ENGINE.GameClass()
-export class EnemyActor extends ENGINE.Actor {
+export class EnemyActor extends ENGINE.SceneNode {
   private enemyId = '';
   private visualScale = 1;
   private visualOffsetY = 0;
@@ -178,6 +178,11 @@ export class EnemyActor extends ENGINE.Actor {
   private despawning = false;
   private despawnFadeElapsed = 0;
   private readonly visualBaseScale = new THREE.Vector3(1, 1, 1);
+
+  constructor() {
+    super();
+    this.isRoot = true;
+  }
 
   public override initialize(options?: EnemyActorOptions): void {
     super.initialize(options);

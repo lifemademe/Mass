@@ -141,7 +141,6 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     piece.position.x -= directionX * (pawn.getBodyRadius() + 0.55);
     piece.position.y = Math.max(0.34, piece.position.y);
     piece.position.z = 0;
-    piece.isRoot = true;
     this.getWorld()?.add(piece);
     this.ledger.setNode(record.id, piece);
     this.setPhase('split');

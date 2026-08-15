@@ -10,15 +10,20 @@ import { CombatFeelSettingsComponent } from './CombatFeelSettingsComponent.js';
 import { SoundFeedbackSettingsComponent } from './SoundFeedbackSettingsComponent.js';
 
 @ENGINE.GameClass()
-export class Action2DSettingsActor extends ENGINE.Actor {
+export class Action2DSettingsActor extends ENGINE.SceneNode {
   private combatFeelSettings!: CombatFeelSettingsComponent;
   private soundFeedbackSettings!: SoundFeedbackSettingsComponent;
+
+  constructor() {
+    super();
+    this.isRoot = true;
+  }
 
   public static get(world: ENGINE.World | null | undefined): Action2DSettingsActor | null {
     return world?.getNodes(Action2DSettingsActor)[0] ?? null;
   }
 
-  public override initialize(options?: ENGINE.ActorOptions): void {
+  public override initialize(options?: ENGINE.SceneNodeOptions): void {
     super.initialize(options);
 
     const existingCombatFeel = this.getNode(CombatFeelSettingsComponent);

@@ -287,6 +287,7 @@ export class SlimePieceNode extends ENGINE.SceneNode {
 
   constructor() {
     super();
+    this.isRoot = true;
   }
 
   public override initialize(options?: ENGINE.SceneNodeOptions): void {

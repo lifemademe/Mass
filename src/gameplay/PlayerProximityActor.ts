@@ -16,12 +16,12 @@ import * as THREE from 'three';
 import { Action2DGameMode } from '../core/Action2DGameMode.js';
 import { PlatformerPawn } from '../player/PlatformerPawn.js';
 
-export interface PlayerProximityActorOptions extends ENGINE.ActorOptions {
+export interface PlayerProximityActorOptions extends ENGINE.SceneNodeOptions {
   /** Activation / collect radius in world units. */
   radius?: number;
 }
 
-export abstract class PlayerProximityActor extends ENGINE.Actor {
+export abstract class PlayerProximityActor extends ENGINE.SceneNode {
   /** Activation / collect radius in world units (expose with `@property` on concrete classes). */
   public radius = 1.6;
 
@@ -39,6 +39,11 @@ export abstract class PlayerProximityActor extends ENGINE.Actor {
   private readonly onActorEnteredHandler = (node: ENGINE.SceneNode, _zone: ENGINE.TriggerZoneNode): void => {
     this.handleNodeEntered(node);
   };
+
+  constructor() {
+    super();
+    this.isRoot = true;
+  }
 
   public override initialize(options?: PlayerProximityActorOptions): void {
     super.initialize(options);
