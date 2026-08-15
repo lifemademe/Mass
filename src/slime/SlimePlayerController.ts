@@ -27,10 +27,15 @@ export class SlimePlayerController extends ENGINE.PlayerController implements EN
   }
 
   public produceInput(_simTimeMs: number, cmd: ENGINE.MovementInputCmd): void {
-    cmd.moveInput.x += this.right - this.left;
+    const gameplayActive = getSlimeGameContext(this.getWorld())?.isGameplayActive() ?? false;
+    const moveInput = gameplayActive ? this.right - this.left : 0;
+    this.pawnRef?.setTetherMovementInputActive(Math.abs(moveInput) > 0.01);
+    if (!gameplayActive) return;
+    cmd.moveInput.x += moveInput;
   }
 
   public override handleKeyDown(event: KeyboardEvent): boolean {
+    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
     if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
       this.left = 1;
     } else if (event.code === 'KeyD' || event.code === 'ArrowRight') {
@@ -48,6 +53,7 @@ export class SlimePlayerController extends ENGINE.PlayerController implements EN
   }
 
   public override handleKeyUp(event: KeyboardEvent): boolean {
+    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
     if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
       this.left = 0;
     } else if (event.code === 'KeyD' || event.code === 'ArrowRight') {
@@ -62,6 +68,7 @@ export class SlimePlayerController extends ENGINE.PlayerController implements EN
   }
 
   public override handleMouseMove(event: MouseEvent): boolean {
+    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
     const point = this.projectMouseToPlayPlane(event);
     if (!point) return false;
     this.aimPoint.copy(point);
@@ -70,12 +77,14 @@ export class SlimePlayerController extends ENGINE.PlayerController implements EN
   }
 
   public override handleMouseDown(_button: ENGINE.MouseButton, event: MouseEvent): boolean {
+    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
     if (event.button !== 0) return false;
     this.pawnRef?.beginStretch();
     return true;
   }
 
   public override handleMouseUp(_button: ENGINE.MouseButton, event: MouseEvent): boolean {
+    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
     if (event.button !== 0) return false;
     this.pawnRef?.releaseStretch();
     return true;

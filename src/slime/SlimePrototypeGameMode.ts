@@ -2,10 +2,14 @@ import * as ENGINE from '@gnsx/genesys.js';
 import * as THREE from 'three';
 
 import { MassLedger, type MassRecord, type MassSnapshot } from './MassLedger.js';
+import { OvergrownAtmosphereBuilder } from './OvergrownAtmosphere.js';
+import { SlimeFeedbackSystem, type SlimeFeedbackEvent } from './SlimeFeedback.js';
 import { SlimePawn } from './SlimePawn.js';
 import { SlimePlayerController } from './SlimePlayerController.js';
 import { SlimePrototypeHud } from './SlimePrototypeHud.js';
 import { setSlimeGameContext, type PrototypePhase, type SlimeGameContext } from './SlimeRuntime.js';
+import { VerticalStageBuilder } from './VerticalStageBuilder.js';
+import { MassMainMenu } from '../ui/MassMainMenu.js';
 import {
   BiomassPickupNode,
   PrototypeBlockNode,
@@ -17,20 +21,35 @@ import {
   SlimeSwitchNode,
 } from './SlimeWorldNodes.js';
 
-const FERN_MODEL = '@engine/assets/models/demo/SandboxAsset/Foliage/SM_SB_Fern01.glb';
-const MUSHROOM_MODEL = '@engine/assets/models/demo/LowPoly/SM_MushroomCluster01.glb';
+const PHASE_ORDER: Record<PrototypePhase, number> = {
+  stretch: 0,
+  feed: 1,
+  split: 2,
+  infiltrate: 3,
+  sense: 4,
+  return: 5,
+  escape: 6,
+  vertical: 7,
+  verticalUnlocked: 8,
+  complete: 9,
+};
 
 @ENGINE.GameClass()
 export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGameContext {
   private readonly ledger = new MassLedger();
+  private readonly feedback = new SlimeFeedbackSystem();
   private readonly anchors = new Set<SlimeAnchorNode>();
   private readonly gates = new Set<SlimeMassGateNode>();
   private readonly pieces = new Set<SlimePieceNode>();
   private pawn: SlimePawn | null = null;
   private hud: SlimePrototypeHud | null = null;
+  private mainMenu: MassMainMenu | null = null;
   private phase: PrototypePhase = 'stretch';
   private gatesOpen = false;
   private sensedIndex = -1;
+  private gameplayActive = false;
+  private stage = 1;
+  private stageTransitioning = false;
 
   private readonly onMassChanged = (snapshot: MassSnapshot): void => {
     this.pawn?.applyMassSnapshot(snapshot);
@@ -67,12 +86,19 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     const world = this.getWorld();
     if (!world) return false;
     setSlimeGameContext(world, this);
+    this.feedback.bind(world);
     this.buildPrototypeRoom(world);
     this.ledger.onMassChanged.add(this.onMassChanged);
     this.hud = new SlimePrototypeHud(world);
-    void this.hud.initialize().then(() => {
+    this.mainMenu = new MassMainMenu(world.uiManager, {
+      onPlay: () => this.startGame(),
+      onQuit: () => this.quitToEditor(),
+    });
+    void Promise.all([this.hud.initialize(), this.mainMenu.initialize()]).then(() => {
       this.hud?.updateMass(this.ledger.snapshot());
       this.hud?.updatePhase(this.phase);
+      this.hud?.setGameplayVisible(false);
+      this.mainMenu?.showMainMenu();
     });
     this.setPhase('stretch');
     return true;
@@ -82,18 +108,23 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     const world = this.getWorld();
     if (world) setSlimeGameContext(world, null);
     this.ledger.onMassChanged.remove(this.onMassChanged);
+    this.feedback.unbind();
     this.hud?.destroy();
+    this.mainMenu?.destroy();
     this.hud = null;
+    this.mainMenu = null;
     this.anchors.clear();
     this.gates.clear();
     this.pieces.clear();
     this.pawn = null;
+    this.gameplayActive = false;
     return super.endPlay();
   }
 
   public getPawn(): SlimePawn | null { return this.pawn; }
   public getMassSnapshot(): MassSnapshot { return this.ledger.snapshot(); }
   public getControlledRecord(): MassRecord | null { return this.ledger.getControlled(); }
+  public isGameplayActive(): boolean { return this.gameplayActive; }
 
   public registerPawn(pawn: SlimePawn): void {
     this.pawn = pawn;
@@ -111,6 +142,10 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
   public unregisterPiece(piece: SlimePieceNode): void { this.pieces.delete(piece); }
 
   public findAnchorForAim(aimPoint: THREE.Vector3, origin: THREE.Vector3, range: number): SlimeAnchorNode | null {
+    const aimed = this.pickAnchor(aimPoint, origin, range, false);
+    if (aimed && !aimed.isAvailable()) {
+      this.hud?.showMomentumFailure('This growth is dormant. Strike the wall switch first.');
+    }
     return this.pickAnchor(aimPoint, origin, range, true);
   }
 
@@ -118,7 +153,8 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     const candidate = this.pickAnchor(aimPoint, origin, range, false);
     for (const anchor of this.anchors) {
       const selected = anchor === candidate;
-      const valid = origin.distanceTo(anchor.getWorldPosition()) <= Math.min(range, anchor.activationRadius);
+      const valid = anchor.isAvailable()
+        && origin.distanceTo(anchor.getWorldPosition()) <= Math.min(range, anchor.activationRadius);
       anchor.setHighlighted(selected, valid);
     }
     return candidate;
@@ -143,13 +179,20 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     piece.position.z = 0;
     this.getWorld()?.add(piece);
     this.ledger.setNode(record.id, piece);
-    this.setPhase('split');
+    this.playFeedback('split', piece.getWorldPosition());
+    pawn.addCameraImpulse(0.14);
+    if (this.phase === 'split' && this.ledger.snapshot().controlledMass <= 60) {
+      this.setPhase('infiltrate');
+    }
     return piece;
   }
 
-  public consumeBiomass(amount: number): void {
+  public consumeBiomass(amount: number, position: THREE.Vector3): void {
     const controlled = this.ledger.getControlled();
-    if (controlled && this.ledger.consume(controlled.id, amount)) this.setPhase('split');
+    if (controlled && this.ledger.consume(controlled.id, amount)) {
+      this.playFeedback('biomass', position);
+      this.setPhase('split');
+    }
   }
 
   public senseNextPiece(): SlimePieceNode | null {
@@ -161,33 +204,71 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     this.sensedIndex = (this.sensedIndex + 1) % candidates.length;
     const piece = candidates[this.sensedIndex];
     piece.awaken();
-    this.setPhase('sense');
+    this.playFeedback('sense', piece.getWorldPosition());
+    this.setPhase('return');
     return piece;
   }
 
   public reunitePiece(piece: SlimePieceNode): void {
     const controlled = this.ledger.getControlled();
     if (!controlled || !this.ledger.reunite(controlled.id, piece.getRecordId())) return;
+    this.playFeedback('reunion', piece.getWorldPosition());
+    this.pawn?.addCameraImpulse(0.22);
     piece.destroy();
-    if (this.ledger.getDetached().length === 0) this.setPhase('escape');
+    if (this.ledger.getDetached().length === 0) {
+      this.hud?.showReunionMilestone();
+      this.setPhase('escape');
+    }
   }
 
-  public activateGateSwitch(): void {
+  public activateGateSwitch(position: THREE.Vector3): void {
     this.gatesOpen = true;
     for (const gate of this.gates) gate.open();
+    this.playFeedback('switch', position);
     this.setPhase('sense');
+  }
+
+  public activateMomentumSwitch(position: THREE.Vector3): void {
+    let awakened = 0;
+    for (const anchor of this.anchors) {
+      if (!anchor.isAvailable()) {
+        anchor.awaken();
+        awakened += 1;
+      }
+    }
+    if (awakened === 0) return;
+    this.playFeedback('switch', position);
+    this.pawn?.addCameraImpulse(0.28);
+    this.setPhase('verticalUnlocked');
+    this.hud?.showGrowthsAwakened();
+  }
+
+  public reportMomentumFailure(message: string): void {
+    this.hud?.showMomentumFailure(message);
   }
 
   public canPiecesFollow(): boolean { return this.gatesOpen; }
 
-  public tryComplete(requiredMass: number): boolean {
+  public tryComplete(requiredMass: number, position: THREE.Vector3, completesGame: boolean): boolean {
+    if (!this.gameplayActive || this.phase === 'complete' || this.stageTransitioning) return false;
     if (this.ledger.snapshot().controlledMass < requiredMass) return false;
+    if (this.stage === 1 && !completesGame) {
+      this.beginVerticalStage(position);
+      return true;
+    }
+    if (this.stage !== 2 || !completesGame) return false;
+    this.playFeedback('complete', position);
+    this.pawn?.addCameraImpulse(0.34);
     this.setPhase('complete');
     return true;
   }
 
+  public playFeedback(event: SlimeFeedbackEvent, position: THREE.Vector3): void {
+    this.feedback.emit(event, position);
+  }
+
   public setPhase(phase: PrototypePhase): void {
-    if (this.phase === 'complete' && phase !== 'complete') return;
+    if (PHASE_ORDER[phase] < PHASE_ORDER[this.phase]) return;
     this.phase = phase;
     this.hud?.updatePhase(phase);
   }
@@ -209,10 +290,11 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
 
   private pickAnchor(aimPoint: THREE.Vector3, origin: THREE.Vector3, range: number, requireValid: boolean): SlimeAnchorNode | null {
     let best: SlimeAnchorNode | null = null;
-    let bestAimDistance = 1.5;
+    let bestAimDistance = this.pawn?.getAnchorAimTolerance() ?? 1.5;
     for (const anchor of this.anchors) {
       const anchorPosition = anchor.getWorldPosition();
-      const valid = origin.distanceTo(anchorPosition) <= Math.min(range, anchor.activationRadius);
+      const valid = anchor.isAvailable()
+        && origin.distanceTo(anchorPosition) <= Math.min(range, anchor.activationRadius);
       if (requireValid && !valid) continue;
       const aimDistance = aimPoint.distanceTo(anchorPosition);
       if (aimDistance < bestAimDistance) {
@@ -224,12 +306,14 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
   }
 
   private buildPrototypeRoom(world: ENGINE.World): void {
-    if (world.getNodes(SlimeAnchorNode).length > 0) return;
     const addRoot = <T extends ENGINE.SceneNode>(node: T): T => {
       node.isRoot = true;
       world.add(node);
       return node;
     };
+    for (const atmosphereNode of new OvergrownAtmosphereBuilder().build()) addRoot(atmosphereNode);
+    if (world.getNodes(SlimeAnchorNode).length > 0) return;
+
     const block = (name: string, x: number, y: number, width: number, height: number, depth = 3): void => {
       addRoot(PrototypeBlockNode.create({
         name,
@@ -238,17 +322,6 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
       }));
     };
 
-    const ambient = ENGINE.AmbientLightNode.create({ name: 'Overgrown Ambient', color: 0x8fcbb3, intensity: 1.5 });
-    addRoot(ambient);
-    const sun = ENGINE.DirectionalLightNode.create({
-      name: 'Broken Ceiling Light',
-      color: 0xc8ffe5,
-      intensity: 3.2,
-      castShadow: true,
-      position: new THREE.Vector3(-6, 14, 8),
-    });
-    sun.rotation.set(-0.65, -0.45, -0.2);
-    addRoot(sun);
     addRoot(SlimePrototypeSpawnNode.create({ name: 'Player Start', position: new THREE.Vector3(-8, 0, 0) }));
 
     block('Start Chamber Floor', -6, -0.5, 10, 1);
@@ -262,7 +335,7 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     addRoot(SlimeAnchorNode.create({ name: 'Pit Growth', position: new THREE.Vector3(0.5, 4.5, 0) }));
     const finalAnchor = SlimeAnchorNode.create({ name: 'Final High Growth', position: new THREE.Vector3(25, 8, 0) });
     finalAnchor.activationRadius = 10;
-    finalAnchor.preferredTetherLength = 2.2;
+    finalAnchor.preferredTetherLength = 1.5;
     addRoot(finalAnchor);
 
     addRoot(BiomassPickupNode.create({ name: 'Biomass +40', position: new THREE.Vector3(4.6, 0.7, 0) }));
@@ -278,21 +351,41 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     exit.requiredMass = 130;
     addRoot(exit);
 
-    const decorations: Array<[string, string, THREE.Vector3, THREE.Vector3]> = [
-      ['Fern Left', FERN_MODEL, new THREE.Vector3(-8, 0, -0.8), new THREE.Vector3(0.9, 0.9, 0.9)],
-      ['Fern Gate', FERN_MODEL, new THREE.Vector3(11.5, 0, -0.8), new THREE.Vector3(0.75, 0.75, 0.75)],
-      ['Mushrooms', MUSHROOM_MODEL, new THREE.Vector3(6.2, 0, -0.75), new THREE.Vector3(0.8, 0.8, 0.8)],
-      ['Exit Mushrooms', MUSHROOM_MODEL, new THREE.Vector3(27.5, 6, -0.75), new THREE.Vector3(0.7, 0.7, 0.7)],
-    ];
-    for (const [name, modelUrl, position, scale] of decorations) {
-      addRoot(ENGINE.ModelMeshNode.create({
-        name,
-        modelUrl,
-        position,
-        scale,
-        physicsOptions: { enabled: false },
-        castShadow: true,
-      }));
+  }
+
+  private startGame(): void {
+    if (this.gameplayActive) return;
+    this.gameplayActive = true;
+    this.mainMenu?.hide();
+    this.hud?.setGameplayVisible(true);
+    this.hud?.updateMass(this.ledger.snapshot());
+    this.hud?.updatePhase(this.phase);
+  }
+
+  private quitToEditor(): void {
+    const world = this.getWorld();
+    if (world?.netWorld.isPlaying()) world.netWorld.endPlay();
+  }
+
+  private beginVerticalStage(exitPosition: THREE.Vector3): void {
+    const world = this.getWorld();
+    const pawn = this.pawn;
+    if (!world || !pawn) return;
+    this.stageTransitioning = true;
+    this.playFeedback('stage', exitPosition);
+    pawn.addCameraImpulse(0.25);
+
+    const stage = new VerticalStageBuilder();
+    for (const node of stage.build()) {
+      node.isRoot = true;
+      world.add(node);
     }
+    this.stage = 2;
+    this.phase = 'vertical';
+    pawn.prepareVerticalStage();
+    pawn.teleportTo(stage.spawnPosition);
+    this.hud?.updatePhase('vertical');
+    this.hud?.showStageIntro();
+    this.stageTransitioning = false;
   }
 }

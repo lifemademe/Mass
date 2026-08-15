@@ -8,12 +8,12 @@
           {
             "$bc": "c",
             "_": [
-              0.274677,
-              0.597202,
-              0.450786
+              0.162029,
+              0.401978,
+              0.274677
             ]
           },
-          1.5
+          0.65
         ]
       }
     },
@@ -25,12 +25,12 @@
           {
             "$bc": "c",
             "_": [
-              0.57758,
-              1,
-              0.783538
+              0.48515,
+              0.904661,
+              0.630757
             ]
           },
-          3.2
+          1.6
         ]
       }
     }
@@ -108,19 +108,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "de6eb66b-2932-40f2-bccc-f1f1e46e15d2"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block",
             "nodeId": 63559,
             "position": {
@@ -140,7 +128,8 @@
                 3
               ]
             },
-            "uuid": "f9ced55511709c04"
+            "uuid": "f9ced55511709c04",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 02",
@@ -159,19 +148,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "6c6e7132-6e47-4f58-bb2b-b37f0835756f"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block 02",
             "nodeId": 4198,
             "position": {
@@ -191,7 +168,8 @@
                 3
               ]
             },
-            "uuid": "b4eff01b6b0135b4"
+            "uuid": "b4eff01b6b0135b4",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 03",
@@ -210,19 +188,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "d304a5b2-80c1-446b-a048-394f446590a2"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block 03",
             "nodeId": 22086,
             "position": {
@@ -242,7 +208,8 @@
                 3
               ]
             },
-            "uuid": "8f8c6c0c664e4d0b"
+            "uuid": "8f8c6c0c664e4d0b",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 04",
@@ -261,19 +228,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "ae7411a6-83c7-416e-b17f-4c7025f74940"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block 04",
             "nodeId": 43859,
             "position": {
@@ -293,7 +248,8 @@
                 3
               ]
             },
-            "uuid": "0912c5c826ce5da4"
+            "uuid": "0912c5c826ce5da4",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 05",
@@ -312,19 +268,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "1a6700ef-6e84-4cf6-afdd-7a5ca3c4c998"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block 05",
             "nodeId": 38831,
             "position": {
@@ -344,7 +288,8 @@
                 3
               ]
             },
-            "uuid": "9d8672c2bb2d53fc"
+            "uuid": "9d8672c2bb2d53fc",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 06",
@@ -363,19 +308,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "b8fd0e82-4361-44f6-892a-f2986b7bd4c3"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block 06",
             "nodeId": 12357,
             "position": {
@@ -395,7 +328,8 @@
                 3
               ]
             },
-            "uuid": "7cf62fc46b78e42c"
+            "uuid": "7cf62fc46b78e42c",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 07",
@@ -414,19 +348,7 @@
             "children": {
               "$length": 1
             },
-            "material": {
-              "$bc": "THREE.MeshStandardMaterial",
-              "color": {
-                "$bc": "c",
-                "_": [
-                  0.019382,
-                  0.040915,
-                  0.028426
-                ]
-              },
-              "roughness": 0.92,
-              "uuid": "9fb81f71-42d8-4207-bc27-14466d29e31f"
-            },
+            "material": "@engine/assets/shaders/M_Stone_Mossy.material.json",
             "name": "Prototype Block 07",
             "nodeId": 41968,
             "position": {
@@ -446,7 +368,8 @@
                 3
               ]
             },
-            "uuid": "20991486c39671d9"
+            "uuid": "20991486c39671d9",
+            "uvScaleTilesPerUnit": 0.65
           }
         ],
         "name": "Scene 08",
@@ -595,7 +518,7 @@
                   },
                   "opacity": 0.5,
                   "transparent": true,
-                  "uuid": "5aecd1b0-011c-44a4-ad1d-4905c0d54d66",
+                  "uuid": "fa0b1613-f4fc-4a25-ba0f-4011dfdf3566",
                   "wireframe": true
                 },
                 "name": "Trigger",
@@ -766,7 +689,7 @@
                   },
                   "opacity": 0.5,
                   "transparent": true,
-                  "uuid": "0d7ac28d-af5a-4bdc-8359-91d0a2046f5c",
+                  "uuid": "a127a7cd-0da2-4bbe-b867-75a1ad654ae8",
                   "wireframe": true
                 },
                 "name": "Trigger",
@@ -880,7 +803,7 @@
                   },
                   "opacity": 0.5,
                   "transparent": true,
-                  "uuid": "733e663e-589f-4efa-b113-5875ed377da9",
+                  "uuid": "3f53687f-9061-4fde-8fe4-fbfe4a7c5a59",
                   "wireframe": true
                 },
                 "name": "Trigger",
@@ -1039,6 +962,9 @@
         "children": [
           {
             "$bc": "ENGINE.FogNode",
+            "fogColor": 463375,
+            "fogFar": 82,
+            "fogNear": 16,
             "name": "Fog",
             "nodeId": 58705,
             "uuid": "f3eb14ecc5903fb6"

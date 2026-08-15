@@ -1,0 +1,143 @@
+.mass-main-menu {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #f4f0df;
+  background-image: url("@project/assets/textures/Main_menu.png");
+  background-position: center;
+  background-size: cover;
+  pointer-events: auto;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.mass-main-menu-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(4, 15, 10, 0.12) 0%, rgba(2, 8, 6, 0.42) 70%),
+    linear-gradient(90deg, rgba(2, 8, 6, 0.66), rgba(2, 8, 6, 0.16) 45%, rgba(2, 8, 6, 0.52));
+}
+
+.mass-main-menu-panel {
+  position: relative;
+  width: min(390px, calc(100vw - 48px));
+  margin-bottom: 10vh;
+  padding: 28px 36px 24px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(5, 17, 12, 0.78), rgba(3, 11, 8, 0.64));
+  border: 1px solid rgba(221, 235, 190, 0.38);
+  border-radius: 52% 52% 20px 20px / 24px 24px 20px 20px;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.62), inset 0 0 45px rgba(98, 169, 91, 0.08);
+  backdrop-filter: blur(5px);
+}
+
+.mass-main-menu-kicker {
+  margin: 10px 0 1px;
+  color: #b8c9a7;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+}
+
+.mass-main-menu-title {
+  margin: 0;
+  color: #fffbed;
+  font-size: clamp(58px, 8vw, 92px);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 26px rgba(183, 241, 154, 0.18);
+}
+
+.mass-main-menu-subtitle {
+  margin: 8px 0 22px;
+  color: #d1d8c3;
+  font-size: 15px;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+.mass-main-menu-actions {
+  display: grid;
+  gap: 8px;
+  width: 240px;
+  margin: 0 auto;
+}
+
+.mass-main-menu-actions .ui-button {
+  width: 100%;
+  min-height: 42px;
+  color: #eef4dd;
+  background: linear-gradient(90deg, transparent, rgba(56, 103, 65, 0.48), transparent);
+  border-color: rgba(207, 232, 185, 0.32);
+  border-radius: 3px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: none;
+}
+
+.mass-main-menu-actions .ui-button:hover {
+  color: #ffffff;
+  background: linear-gradient(90deg, transparent, rgba(100, 169, 99, 0.68), transparent);
+  border-color: rgba(229, 245, 207, 0.7);
+}
+
+.mass-main-menu-controls {
+  display: none;
+  gap: 7px;
+  margin: 18px auto 2px;
+  color: #c9d2bd;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  text-align: left;
+}
+
+.mass-main-menu[data-controls-open="true"] .mass-main-menu-controls {
+  display: grid;
+}
+
+.mass-main-menu-controls p {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 12px;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(213, 232, 194, 0.12);
+}
+
+.mass-main-menu-controls strong { color: #f0f4e5; font-weight: 600; }
+
+.mass-main-menu-flourish {
+  display: grid;
+  grid-template-columns: 1fr 10px 1fr;
+  align-items: center;
+  gap: 9px;
+  color: #c8ddb3;
+}
+
+.mass-main-menu-flourish span { height: 1px; background: linear-gradient(90deg, transparent, currentColor); }
+.mass-main-menu-flourish span:last-child { background: linear-gradient(90deg, currentColor, transparent); }
+.mass-main-menu-flourish i { width: 8px; height: 8px; border: 1px solid currentColor; transform: rotate(45deg); }
+.mass-main-menu-flourish.lower { margin-top: 20px; opacity: 0.7; }
+
+.mass-main-menu-caption {
+  position: absolute;
+  bottom: 18px;
+  margin: 0;
+  color: rgba(239, 244, 222, 0.72);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-shadow: 0 2px 6px #000;
+}
+
+@media (max-height: 700px) {
+  .mass-main-menu-panel { margin-bottom: 2vh; padding-top: 20px; padding-bottom: 18px; }
+  .mass-main-menu-title { font-size: 52px; }
+  .mass-main-menu-subtitle { margin-bottom: 14px; }
+}

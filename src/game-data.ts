@@ -19,7 +19,7 @@ import { PlayerHealthComponent } from './player/PlayerHealthComponent.js';
 import { SlimeCameraNode } from './slime/SlimeCameraNode.js';
 import { SlimeMovementSettingsNode } from './slime/SlimeMovement.js';
 import { SlimeMassNode } from './slime/SlimePawn.js';
-import { BiomassPickupNode, PrototypeExitNode, SlimeAnchorNode, SlimeMassGateNode } from './slime/SlimeWorldNodes.js';
+import { BiomassPickupNode, MomentumSwitchNode, PrototypeExitNode, SlimeAnchorNode, SlimeMassGateNode } from './slime/SlimeWorldNodes.js';
 
 export function registerMetadata(): void {
   registerGeneratedClassMetadata(DynamicUVNodeMaterialAsset, { description: "World-space triplanar material. Samples the texture three times using\nworld-position XZ, XY, and YZ planes, then blends by the world normal —\nno per-mesh UV coordinates required." });
@@ -992,6 +992,69 @@ export function registerMetadata(): void {
         "max": 20,
         "step": 0.25
       },
+      "swingStretchDistance": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      },
+      "swingStretchStartSpeed": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 30,
+        "step": 0.5
+      },
+      "swingStretchFullSpeed": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 1,
+        "max": 40,
+        "step": 0.5
+      },
+      "tetherStretchResponsiveness": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 1,
+        "max": 20,
+        "step": 0.5
+      },
+      "tetherRecoveryResponsiveness": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 1,
+        "max": 20,
+        "step": 0.5
+      },
+      "idleStretchDistance": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 3,
+        "step": 0.05
+      },
+      "idleStretchDelay": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 5,
+        "step": 0.05
+      },
+      "idleStretchDuration": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0.5,
+        "max": 10,
+        "step": 0.25
+      },
+      "idleStretchRecoveryDuration": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0.5,
+        "max": 10,
+        "step": 0.25
+      },
       "swingAcceleration": {
         "type": "number",
         "category": "Stretch",
@@ -999,12 +1062,33 @@ export function registerMetadata(): void {
         "max": 60,
         "step": 1
       },
-      "releaseBoost": {
+      "rotationAssistAcceleration": {
         "type": "number",
         "category": "Stretch",
         "min": 0,
-        "max": 20,
-        "step": 0.25
+        "max": 80,
+        "step": 1
+      },
+      "rotationAssistHeightRatio": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 0.9,
+        "step": 0.05
+      },
+      "maxOrbitSpeed": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 5,
+        "max": 50,
+        "step": 1
+      },
+      "maxReleaseSpeed": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 5,
+        "max": 40,
+        "step": 0.5
       }
     });
 
@@ -1060,6 +1144,10 @@ export function registerMetadata(): void {
         "min": 0,
         "max": 8,
         "step": 0.05
+      },
+      "startsDormant": {
+        "type": "boolean",
+        "category": "Anchor"
       }
     });
 
@@ -1090,6 +1178,37 @@ export function registerMetadata(): void {
       }
     });
 
+  registerGeneratedPropertyMetadata(MomentumSwitchNode, {
+      "minimumMass": {
+        "type": "number",
+        "category": "Momentum Switch",
+        "min": 20,
+        "max": 300,
+        "step": 5
+      },
+      "minimumImpactSpeed": {
+        "type": "number",
+        "category": "Momentum Switch",
+        "min": 1,
+        "max": 30,
+        "step": 0.5
+      },
+      "requiredMomentum": {
+        "type": "number",
+        "category": "Momentum Switch",
+        "min": 100,
+        "max": 5000,
+        "step": 50
+      },
+      "impactDirectionX": {
+        "type": "number",
+        "category": "Momentum Switch",
+        "min": -1,
+        "max": 1,
+        "step": 2
+      }
+    });
+
   registerGeneratedPropertyMetadata(PrototypeExitNode, {
       "requiredMass": {
         "type": "number",
@@ -1097,6 +1216,10 @@ export function registerMetadata(): void {
         "min": 1,
         "max": 500,
         "step": 1
+      },
+      "completesGame": {
+        "type": "boolean",
+        "category": "Exit"
       }
     });
 

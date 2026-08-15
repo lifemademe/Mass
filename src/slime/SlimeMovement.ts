@@ -6,6 +6,7 @@ export interface SlimeMovementHost {
   getTetherAnchorPosition(): THREE.Vector3 | null;
   getTetherLength(): number;
   getMovementSettings(): SlimeMovementSettingsNode;
+  getMovementTimeScale(): number;
 }
 
 @ENGINE.GameClass()
@@ -26,7 +27,7 @@ export class SlimeMovementSettingsNode extends ENGINE.SceneNode {
   public airControl = 0.7;
 
   @ENGINE.property({ type: 'number', category: 'Movement', min: 0, max: 30, step: 0.25 })
-  public airDrag = 3;
+  public airDrag = 1.2;
 
   @ENGINE.property({ type: 'number', category: 'Movement', min: 1, max: 100, step: 1 })
   public gravity = 38;
@@ -49,11 +50,47 @@ export class SlimeMovementSettingsNode extends ENGINE.SceneNode {
   @ENGINE.property({ type: 'number', category: 'Stretch', min: 1, max: 20, step: 0.25 })
   public maxTetherReelSpeed = 7;
 
-  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 60, step: 1 })
-  public swingAcceleration = 18;
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 3, step: 0.05 })
+  public swingStretchDistance = 1.5;
 
-  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 20, step: 0.25 })
-  public releaseBoost = 3;
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 30, step: 0.5 })
+  public swingStretchStartSpeed = 4;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 1, max: 40, step: 0.5 })
+  public swingStretchFullSpeed = 15;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 1, max: 20, step: 0.5 })
+  public tetherStretchResponsiveness = 5;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 1, max: 20, step: 0.5 })
+  public tetherRecoveryResponsiveness = 8.5;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 3, step: 0.05 })
+  public idleStretchDistance = 0.8;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 5, step: 0.05 })
+  public idleStretchDelay = 0.75;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0.5, max: 10, step: 0.25 })
+  public idleStretchDuration = 3;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0.5, max: 10, step: 0.25 })
+  public idleStretchRecoveryDuration = 2;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 60, step: 1 })
+  public swingAcceleration = 12;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 80, step: 1 })
+  public rotationAssistAcceleration = 10;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 0.9, step: 0.05 })
+  public rotationAssistHeightRatio = 0.7;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 5, max: 50, step: 1 })
+  public maxOrbitSpeed = 18;
+
+  @ENGINE.property({ type: 'number', category: 'Stretch', min: 5, max: 40, step: 0.5 })
+  public maxReleaseSpeed = 19;
 
   public override getEditorClassIcon(): string | null {
     return 'Icon_Character';
@@ -103,7 +140,7 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
     const auxState = { custom: startData.auxState.custom.clone() };
     const host = mover.getRoot() as unknown as SlimeMovementHost;
     const settings = host.getMovementSettings();
-    const dt = Math.min(timeStep.stepMs / 1000, 0.1);
+    const dt = Math.min(timeStep.stepMs / 1000, 0.1) * host.getMovementTimeScale();
     const wasGrounded = startData.syncState.tags.includes(ENGINE.GROUNDED_TAG);
     const inputX = THREE.MathUtils.clamp(startData.inputCmd.moveInput.x, -1, 1);
 
@@ -113,10 +150,17 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
     const targetX = proposedMove.velocity.x * host.getMoveSpeed();
     if (!anchor) {
       const hasHorizontalInput = Math.abs(inputX) > 0.01;
-      const horizontalRate = hasHorizontalInput
-        ? settings.acceleration * (wasGrounded ? 1 : settings.airControl)
-        : wasGrounded ? settings.acceleration : settings.airDrag;
-      vx = moveToward(vx, targetX, horizontalRate * dt);
+      if (wasGrounded) {
+        vx = moveToward(vx, targetX, settings.acceleration * dt);
+      } else if (hasHorizontalInput) {
+        const inputMatchesVelocity = Math.sign(inputX) === Math.sign(vx);
+        const carryingSwingMomentum = inputMatchesVelocity && Math.abs(vx) > Math.abs(targetX);
+        if (!carryingSwingMomentum) {
+          vx = moveToward(vx, targetX, settings.acceleration * settings.airControl * dt);
+        }
+      } else {
+        vx = moveToward(vx, 0, settings.airDrag * dt);
+      }
     }
     vy = Math.max(vy - settings.gravity * dt, -settings.maxFallSpeed);
 
@@ -125,25 +169,36 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
       const distance = Math.max(toAnchor.length(), 0.001);
       const direction = toAnchor.multiplyScalar(1 / distance);
       const tangent = new THREE.Vector3(direction.y, -direction.x, 0);
-      if (tangent.x < 0) tangent.negate();
       const tetherLength = host.getTetherLength();
       const extension = Math.max(0, distance - tetherLength);
-      const tautness = THREE.MathUtils.clamp(distance / tetherLength, 0, 1);
-      const pull = settings.tetherPull * tautness + extension * settings.tetherSpringStrength;
-      vx += (direction.x * pull + tangent.x * inputX * settings.swingAcceleration) * dt;
-      vy += (direction.y * pull + tangent.y * inputX * settings.swingAcceleration) * dt;
+      const pull = extension * settings.tetherSpringStrength;
+      const tangentialSpeed = vx * tangent.x + vy * tangent.y;
+      const continuingRotation = Math.abs(inputX) > 0.01
+        && (Math.abs(tangentialSpeed) < 0.1 || Math.sign(inputX) === Math.sign(tangentialSpeed));
+      const rotationAssistHeight = tetherLength * settings.rotationAssistHeightRatio;
+      const reachedRotationAssistHeight = sync.position.y >= anchor.y + rotationAssistHeight;
+      const rotationAssist = reachedRotationAssistHeight && continuingRotation
+        ? settings.rotationAssistAcceleration
+        : 0;
+      const tangentialAcceleration = inputX * (settings.swingAcceleration + rotationAssist);
+      vx += (direction.x * pull + tangent.x * tangentialAcceleration) * dt;
+      vy += (direction.y * pull + tangent.y * tangentialAcceleration) * dt;
 
       // Remove rubber-band energy only along the tether. Tangential velocity is
       // intentionally preserved so A/D still produces a lively, controllable swing.
       const radialSpeed = vx * direction.x + vy * direction.y;
-      const dampedRadialSpeed = THREE.MathUtils.clamp(
-        radialSpeed * Math.exp(-settings.tetherRadialDamping * dt),
-        -settings.maxTetherReelSpeed,
-        settings.maxTetherReelSpeed,
-      );
-      const radialCorrection = dampedRadialSpeed - radialSpeed;
+      const radialCorrection = -radialSpeed;
       vx += direction.x * radialCorrection;
       vy += direction.y * radialCorrection;
+      const acceleratedTangentialSpeed = vx * tangent.x + vy * tangent.y;
+      const clampedTangentialSpeed = THREE.MathUtils.clamp(
+        acceleratedTangentialSpeed,
+        -settings.maxOrbitSpeed,
+        settings.maxOrbitSpeed,
+      );
+      const tangentialCorrection = clampedTangentialSpeed - acceleratedTangentialSpeed;
+      vx += tangent.x * tangentialCorrection;
+      vy += tangent.y * tangentialCorrection;
 
       // Keep the tether at the length captured when it attached. Waiting until the
       // exact limit allows a fast fall to overshoot by a full frame and slowly drift
@@ -190,11 +245,10 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
     }
 
     if (anchor) {
-      const lowestTetherY = anchor.y - host.getTetherLength();
-      const tetherWasAboveFloor = startData.syncState.position.y >= lowestTetherY - 0.05;
-      if (tetherWasAboveFloor && sync.position.y < lowestTetherY) {
-        sync.position.y = lowestTetherY;
-        if (vy < 0) vy = 0;
+      const fromAnchor = sync.position.clone().sub(anchor);
+      const distance = fromAnchor.length();
+      if (distance > 0.001) {
+        sync.position.copy(anchor).addScaledVector(fromAnchor, host.getTetherLength() / distance);
         if (root) {
           root.position.copy(sync.position);
           root.setPhysicsTransformUpdateFlags({

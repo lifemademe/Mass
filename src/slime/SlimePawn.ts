@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 import type { MassSnapshot } from './MassLedger.js';
 import { SlimeCameraNode } from './SlimeCameraNode.js';
+import { SlimeTrailNode } from './SlimeJuiceNodes.js';
 import { SlimeMovementMode, SlimeMovementSettingsNode } from './SlimeMovement.js';
 import { getSlimeGameContext } from './SlimeRuntime.js';
 
@@ -10,6 +11,8 @@ import type { SlimeAnchorNode, SlimePieceNode } from './SlimeWorldNodes.js';
 
 const MOVEMENT_MODE = 'slimeMovement';
 const MEDIUM_RADIUS = 0.48;
+const RELEASE_FOCUS_TIME_SCALE = 0.65;
+const RELEASE_FOCUS_DURATION = 0.3;
 
 export type SlimeSizeTier = 'small' | 'medium' | 'large';
 
@@ -62,6 +65,10 @@ export class SlimePawn extends ENGINE.Pawn {
   private aimedAnchor: SlimeAnchorNode | null = null;
   private tetherAnchor: SlimeAnchorNode | null = null;
   private tetherLength = 0;
+  private tetherRestLength = 0;
+  private tetherMovementInputActive = false;
+  private tetherIdleElapsed = 0;
+  private tetherIdleExtension = 0;
   private senseTarget: SlimePieceNode | null = null;
   private aimPoint = new THREE.Vector3(1, 1, 0);
   private controlledMass = 100;
@@ -71,6 +78,12 @@ export class SlimePawn extends ENGINE.Pawn {
   private splitChargeElapsed = 0;
   private senseVisualRemaining = 0;
   private elapsed = 0;
+  private wasGrounded = false;
+  private lastVerticalSpeed = 0;
+  private trailElapsed = 0;
+  private readonly lastTrailPosition = new THREE.Vector3();
+  private focusRemaining = 0;
+  private focusCooldown = 0;
 
   constructor() {
     super();
@@ -137,6 +150,7 @@ export class SlimePawn extends ENGINE.Pawn {
   public override beginPlay(): boolean {
     this.bindChildren();
     if (!super.beginPlay()) return false;
+    this.lastTrailPosition.copy(this.getWorldPosition());
     getSlimeGameContext(this.getWorld())?.registerPawn(this);
     return true;
   }
@@ -164,6 +178,22 @@ export class SlimePawn extends ENGINE.Pawn {
     return this.movementSettings;
   }
 
+  public getMovementTimeScale(): number {
+    return this.focusRemaining > 0 ? RELEASE_FOCUS_TIME_SCALE : 1;
+  }
+
+  public getAnchorAimTolerance(): number {
+    return this.focusRemaining > 0 ? 2.35 : 1.5;
+  }
+
+  public getVelocity(): THREE.Vector3 {
+    return this.mover?.getVelocity().clone() ?? new THREE.Vector3();
+  }
+
+  public setTetherMovementInputActive(active: boolean): void {
+    this.tetherMovementInputActive = active;
+  }
+
   public getControlledMass(): number {
     return this.controlledMass;
   }
@@ -187,12 +217,36 @@ export class SlimePawn extends ENGINE.Pawn {
     return THREE.MathUtils.clamp(4 + 0.04 * this.controlledMass, 5, 10);
   }
 
+  public teleportTo(position: THREE.Vector3): void {
+    this.releaseStretch();
+    const sync = this.mover.getSyncState() as ENGINE.MovementSyncState;
+    sync.position.copy(position);
+    sync.velocity.set(0, 0, 0);
+    sync.tags = [ENGINE.FALLING_TAG];
+    ENGINE.setVerticalVelocity(sync, 0);
+    this.position.copy(position);
+    this.lastTrailPosition.copy(position);
+    this.lastVerticalSpeed = 0;
+    this.wasGrounded = false;
+    this.cameraNode.resetToTarget();
+  }
+
+  public prepareVerticalStage(): void {
+    this.cameraNode.offsetY = 2.8;
+    this.cameraNode.followLambda = 8.5;
+  }
+
+  public addCameraImpulse(amount: number): void {
+    this.cameraNode.addImpulse(amount);
+  }
+
   public getTetherAnchorPosition(): THREE.Vector3 | null {
     return this.tetherAnchor?.getWorldPosition().clone() ?? null;
   }
 
   public getTetherLength(): number {
-    return this.tetherLength > 0 ? this.tetherLength : this.getStretchRange();
+    if (this.tetherLength <= 0) return this.getStretchRange();
+    return Math.min(this.tetherLength, this.getStretchRange());
   }
 
   public setAimWorldPoint(point: THREE.Vector3): void {
@@ -214,16 +268,24 @@ export class SlimePawn extends ENGINE.Pawn {
       this.getStretchRange(),
     ) ?? null;
     if (!anchor) return;
+    this.focusRemaining = 0;
     this.tetherAnchor = anchor;
-    const targetLength = anchor.preferredTetherLength > 0
+    let targetLength = anchor.preferredTetherLength > 0
       ? anchor.preferredTetherLength
       : this.movementSettings.swingTetherLength;
-    this.tetherLength = Math.min(
-      anchor.getWorldPosition().distanceTo(this.getWorldPosition()),
+    targetLength = Math.min(targetLength, 1.5);
+    const attachDistance = anchor.getWorldPosition().distanceTo(this.getWorldPosition());
+    this.tetherRestLength = Math.min(
+      attachDistance,
       targetLength,
     );
+    this.tetherLength = attachDistance;
+    this.tetherIdleElapsed = 0;
+    this.tetherIdleExtension = 0;
     anchor.setHighlighted(true, true);
     this.tetherVisual.visible = true;
+    context?.playFeedback('attach', anchor.getWorldPosition());
+    this.cameraNode.addImpulse(0.08);
     context?.setPhase('feed');
   }
 
@@ -231,20 +293,22 @@ export class SlimePawn extends ENGINE.Pawn {
     if (!this.tetherAnchor) return;
     const sync = this.mover.getSyncState() as ENGINE.MovementSyncState;
     const speed = sync.velocity.length();
-    const anchorPosition = this.tetherAnchor.getWorldPosition();
-    const distance = anchorPosition.distanceTo(sync.position);
-    const tension = THREE.MathUtils.clamp(distance / this.getStretchRange(), 0, 1);
-    if (speed > 0.1) {
-      sync.velocity.addScaledVector(
-        sync.velocity.clone().normalize(),
-        this.movementSettings.releaseBoost * tension,
-      );
-      ENGINE.setVerticalVelocity(sync, sync.velocity.y);
+    if (speed > this.movementSettings.maxReleaseSpeed) {
+      sync.velocity.setLength(this.movementSettings.maxReleaseSpeed);
     }
+    ENGINE.setVerticalVelocity(sync, sync.velocity.y);
+    getSlimeGameContext(this.getWorld())?.playFeedback('release', this.getWorldPosition());
     this.tetherAnchor.setHighlighted(false, false);
     this.tetherAnchor = null;
     this.tetherLength = 0;
+    this.tetherRestLength = 0;
+    this.tetherIdleElapsed = 0;
+    this.tetherIdleExtension = 0;
     this.tetherVisual.visible = false;
+    if (this.focusCooldown <= 0) {
+      this.focusRemaining = RELEASE_FOCUS_DURATION;
+      this.focusCooldown = 0.55;
+    }
   }
 
   public beginSplitCharge(): void {
@@ -284,6 +348,9 @@ export class SlimePawn extends ENGINE.Pawn {
   public override tickPrePhysics(deltaTime: number): void {
     super.tickPrePhysics(deltaTime);
     this.elapsed += deltaTime;
+    this.focusRemaining = Math.max(0, this.focusRemaining - deltaTime);
+    this.focusCooldown = Math.max(0, this.focusCooldown - deltaTime);
+    this.updateTetherLength(deltaTime);
     if (this.splitCharging) {
       this.splitChargeElapsed = Math.min(
         this.splitChargeElapsed + deltaTime,
@@ -296,6 +363,15 @@ export class SlimePawn extends ENGINE.Pawn {
   public override tickPostPhysics(deltaTime: number): void {
     super.tickPostPhysics(deltaTime);
     const velocity = this.mover?.getVelocity() ?? new THREE.Vector3();
+    const grounded = this.mover?.hasSyncTag(ENGINE.GROUNDED_TAG, true) ?? false;
+    const context = getSlimeGameContext(this.getWorld());
+    if (grounded && !this.wasGrounded && this.lastVerticalSpeed < -5 && context?.isGameplayActive()) {
+      context.playFeedback('land', this.getWorldPosition());
+      this.cameraNode.addImpulse(THREE.MathUtils.clamp(Math.abs(this.lastVerticalSpeed) / 75, 0.1, 0.26));
+    }
+    this.updateTrail(deltaTime, velocity, grounded, context?.isGameplayActive() ?? false);
+    this.wasGrounded = grounded;
+    this.lastVerticalSpeed = velocity.y;
     const radius = visualRadiusForMass(this.controlledMass);
     const speedStretch = THREE.MathUtils.clamp(Math.abs(velocity.x) / 18, 0, 0.18);
     const wobble = Math.sin(this.elapsed * 7) * 0.025;
@@ -315,6 +391,71 @@ export class SlimePawn extends ENGINE.Pawn {
     } else if (this.senseVisualRemaining <= 0) {
       this.senseVisual.visible = false;
       this.senseTarget = null;
+    }
+  }
+
+  private updateTrail(deltaTime: number, velocity: THREE.Vector3, grounded: boolean, active: boolean): void {
+    if (!active || !grounded || Math.abs(velocity.x) < 1.8) {
+      this.trailElapsed = 0;
+      return;
+    }
+    this.trailElapsed += deltaTime;
+    const position = this.getWorldPosition();
+    if (this.trailElapsed < 0.1 && position.distanceToSquared(this.lastTrailPosition) < 0.16) return;
+    this.trailElapsed = 0;
+    this.lastTrailPosition.copy(position);
+    const radius = visualRadiusForMass(this.controlledMass);
+    const trail = SlimeTrailNode.create({
+      name: 'Slime Trail',
+      position: position.clone().add(new THREE.Vector3(-Math.sign(velocity.x) * radius * 0.45, -radius * 0.52, 0.14)),
+    });
+    trail.configure(new THREE.Vector3(radius * 1.45, radius * 0.24, radius * 0.72), 0.72);
+    this.getWorld()?.add(trail);
+  }
+
+  private updateTetherLength(deltaTime: number): void {
+    if (!this.tetherAnchor || this.tetherRestLength <= 0) return;
+    const anchorPosition = this.tetherAnchor.getWorldPosition();
+    const toAnchor = anchorPosition.sub(this.getWorldPosition());
+    const distance = toAnchor.length();
+    if (distance <= 0.001) return;
+    const direction = toAnchor.multiplyScalar(1 / distance);
+    const tangent = new THREE.Vector3(direction.y, -direction.x, 0);
+    const tangentialSpeed = Math.abs(this.getVelocity().dot(tangent));
+    const settings = this.movementSettings;
+    if (this.tetherMovementInputActive) {
+      this.tetherIdleElapsed = 0;
+      const recoveryRate = settings.idleStretchDistance / settings.idleStretchRecoveryDuration;
+      this.tetherIdleExtension = Math.max(0, this.tetherIdleExtension - recoveryRate * deltaTime);
+    } else {
+      this.tetherIdleElapsed += deltaTime;
+      if (this.tetherIdleElapsed > settings.idleStretchDelay) {
+        const stretchRate = settings.idleStretchDistance / settings.idleStretchDuration;
+        this.tetherIdleExtension = Math.min(
+          settings.idleStretchDistance,
+          this.tetherIdleExtension + stretchRate * deltaTime,
+        );
+      }
+    }
+    const stretchAlpha = THREE.MathUtils.smoothstep(
+      tangentialSpeed,
+      settings.swingStretchStartSpeed,
+      settings.swingStretchFullSpeed,
+    );
+    const momentumExtension = settings.swingStretchDistance * stretchAlpha;
+    const targetLength = this.tetherRestLength + Math.max(momentumExtension, this.tetherIdleExtension);
+    const responsiveness = targetLength > this.tetherLength
+      ? settings.tetherStretchResponsiveness
+      : settings.tetherRecoveryResponsiveness;
+    const blend = 1 - Math.exp(-responsiveness * Math.max(deltaTime, 0));
+    const desiredLength = THREE.MathUtils.lerp(this.tetherLength, targetLength, blend);
+    if (desiredLength < this.tetherLength) {
+      this.tetherLength = Math.max(
+        desiredLength,
+        this.tetherLength - settings.maxTetherReelSpeed * Math.max(deltaTime, 0),
+      );
+    } else {
+      this.tetherLength = desiredLength;
     }
   }
 
