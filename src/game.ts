@@ -10,6 +10,9 @@ import * as ENGINE from '@gnsx/genesys.js';
 import { SlimePrototypeGameMode } from './slime/SlimePrototypeGameMode.js';
 
 class MyGame extends ENGINE.BaseGameLoop {
+  protected override resolveStartupGameMode(_sceneData: unknown): ENGINE.GameMode {
+    return this.createDefaultGameMode();
+  }
 }
 
 export function main(container: HTMLElement, options?: Partial<ENGINE.BaseGameLoopOptions>): ENGINE.IGameLoop {

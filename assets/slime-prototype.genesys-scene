@@ -595,7 +595,7 @@
                   },
                   "opacity": 0.5,
                   "transparent": true,
-                  "uuid": "ef408f9d-1f25-4fb0-b190-c97a804aa73a",
+                  "uuid": "759ce937-32e0-4557-98f7-6096fa08e558",
                   "wireframe": true
                 },
                 "name": "Trigger",
@@ -766,7 +766,7 @@
                   },
                   "opacity": 0.5,
                   "transparent": true,
-                  "uuid": "78fb8562-6ba0-4713-81bb-ba8d88869d27",
+                  "uuid": "4eb0ca54-f4bc-409f-8e2d-1521f3171b09",
                   "wireframe": true
                 },
                 "name": "Trigger",
@@ -880,7 +880,7 @@
                   },
                   "opacity": 0.5,
                   "transparent": true,
-                  "uuid": "661f998c-da62-4495-8b06-ae444f519338",
+                  "uuid": "5bc09658-bb76-4d74-b4d4-d4e637b9ae08",
                   "wireframe": true
                 },
                 "name": "Trigger",
@@ -940,6 +940,14 @@
         ],
         "name": "Scene 14",
         "nodeId": 10720,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -2.5,
+            0,
+            0
+          ]
+        },
         "userData": {
           "objectFlags": 4
         },
@@ -965,6 +973,14 @@
         ],
         "name": "Scene 15",
         "nodeId": 46529,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -1.7,
+            0,
+            0
+          ]
+        },
         "userData": {
           "objectFlags": 4
         },
@@ -1005,6 +1021,14 @@
         ],
         "name": "Scene 16",
         "nodeId": 62725,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -2.7,
+            0,
+            0
+          ]
+        },
         "userData": {
           "objectFlags": 4
         },
@@ -1022,6 +1046,14 @@
         ],
         "name": "Scene 17",
         "nodeId": 12201,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -2.7,
+            0,
+            0
+          ]
+        },
         "userData": {
           "objectFlags": 4
         },
@@ -1042,6 +1074,14 @@
         ],
         "name": "Scene 18",
         "nodeId": 24953,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -2.6,
+            0,
+            0
+          ]
+        },
         "userData": {
           "objectFlags": 4
         },
