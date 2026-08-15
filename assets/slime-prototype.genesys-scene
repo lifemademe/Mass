@@ -1,0 +1,1322 @@
+{
+  "$objects": [
+    {
+      "$bc": "THREE.AmbientLight",
+      "$id": 1,
+      "$value": {
+        "_": [
+          {
+            "$bc": "c",
+            "_": [
+              0.274677,
+              0.597202,
+              0.450786
+            ]
+          },
+          1.5
+        ]
+      }
+    },
+    {
+      "$bc": "THREE.DirectionalLight",
+      "$id": 2,
+      "$value": {
+        "_": [
+          {
+            "$bc": "c",
+            "_": [
+              0.57758,
+              1,
+              0.783538
+            ]
+          },
+          3.2
+        ]
+      }
+    }
+  ],
+  "$root": {
+    "$bc": "ENGINE.World",
+    "children": [
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.SlimeAnchorNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "geometry": {
+              "$bc": "THREE.SphereGeometry",
+              "_": [
+                0.34,
+                16,
+                12
+              ]
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.187821,
+                  0.57758,
+                  0.155926
+                ]
+              },
+              "emissive": {
+                "$bc": "c",
+                "_": [
+                  0.006512,
+                  0.028426,
+                  0.008568
+                ]
+              },
+              "roughness": 0.72,
+              "uuid": "66ef0f53-81ad-49b3-b8f3-8c13ea251d9f"
+            },
+            "name": "Slime Anchor",
+            "nodeId": 61846,
+            "physicsOptions": {
+              "enabled": false
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                0.5,
+                4.5,
+                0
+              ]
+            },
+            "uuid": "62b4691245e0b8dc"
+          }
+        ],
+        "name": "Scene",
+        "nodeId": 19205,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "dbfff371c2dba4c9"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "de6eb66b-2932-40f2-bccc-f1f1e46e15d2"
+            },
+            "name": "Prototype Block",
+            "nodeId": 63559,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                -6,
+                -0.5,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                10,
+                1,
+                3
+              ]
+            },
+            "uuid": "f9ced55511709c04"
+          }
+        ],
+        "name": "Scene 02",
+        "nodeId": 8776,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "2ed550b0a86074cc"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "6c6e7132-6e47-4f58-bb2b-b37f0835756f"
+            },
+            "name": "Prototype Block 02",
+            "nodeId": 4198,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                5,
+                -0.5,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                6,
+                1,
+                3
+              ]
+            },
+            "uuid": "b4eff01b6b0135b4"
+          }
+        ],
+        "name": "Scene 03",
+        "nodeId": 13842,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "509fb59c1a5b657e"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "d304a5b2-80c1-446b-a048-394f446590a2"
+            },
+            "name": "Prototype Block 03",
+            "nodeId": 22086,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                11,
+                -0.5,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                6,
+                1,
+                3
+              ]
+            },
+            "uuid": "8f8c6c0c664e4d0b"
+          }
+        ],
+        "name": "Scene 04",
+        "nodeId": 6882,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "08b2fc82975f40c3"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "ae7411a6-83c7-416e-b17f-4c7025f74940"
+            },
+            "name": "Prototype Block 04",
+            "nodeId": 43859,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                20,
+                -0.5,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                12,
+                1,
+                3
+              ]
+            },
+            "uuid": "0912c5c826ce5da4"
+          }
+        ],
+        "name": "Scene 05",
+        "nodeId": 1204,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "361407fa07529b55"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "1a6700ef-6e84-4cf6-afdd-7a5ca3c4c998"
+            },
+            "name": "Prototype Block 05",
+            "nodeId": 38831,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                29,
+                5.5,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                6,
+                1,
+                3
+              ]
+            },
+            "uuid": "9d8672c2bb2d53fc"
+          }
+        ],
+        "name": "Scene 06",
+        "nodeId": 42556,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "8b4a2d76d9900e66"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "b8fd0e82-4361-44f6-892a-f2986b7bd4c3"
+            },
+            "name": "Prototype Block 06",
+            "nodeId": 12357,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                -11.5,
+                4,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                1,
+                9,
+                3
+              ]
+            },
+            "uuid": "7cf62fc46b78e42c"
+          }
+        ],
+        "name": "Scene 07",
+        "nodeId": 12726,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "1f7cf3938bce931e"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeBlockNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.019382,
+                  0.040915,
+                  0.028426
+                ]
+              },
+              "roughness": 0.92,
+              "uuid": "9fb81f71-42d8-4207-bc27-14466d29e31f"
+            },
+            "name": "Prototype Block 07",
+            "nodeId": 41968,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                14,
+                5.25,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                2,
+                3,
+                3
+              ]
+            },
+            "uuid": "20991486c39671d9"
+          }
+        ],
+        "name": "Scene 08",
+        "nodeId": 24769,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "4f5dccfb15eb3a6a"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.SlimeAnchorNode",
+            "activationRadius": 10,
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "geometry": {
+              "$bc": "THREE.SphereGeometry",
+              "_": [
+                0.34,
+                16,
+                12
+              ]
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.187821,
+                  0.57758,
+                  0.155926
+                ]
+              },
+              "emissive": {
+                "$bc": "c",
+                "_": [
+                  0.006512,
+                  0.028426,
+                  0.008568
+                ]
+              },
+              "roughness": 0.72,
+              "uuid": "76155a30-f734-4d46-a564-71ce8410a40c"
+            },
+            "name": "Slime Anchor 02",
+            "nodeId": 25965,
+            "physicsOptions": {
+              "enabled": false
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                25,
+                8,
+                0
+              ]
+            },
+            "uuid": "f4d244aa6ed1b78d"
+          }
+        ],
+        "name": "Scene 09",
+        "nodeId": 13867,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "b8a4d38022917538"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.BiomassPickupNode",
+            "children": [
+              {
+                "$bc": "ENGINE.MeshNode",
+                "castShadow": true,
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.IcosahedronGeometry",
+                  "_": [
+                    0.42,
+                    2
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshPhysicalMaterial",
+                  "_transmission": 0.18,
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      1,
+                      0.508881,
+                      0.064803
+                    ]
+                  },
+                  "defines": {
+                    "PHYSICAL": ""
+                  },
+                  "emissive": {
+                    "$bc": "c",
+                    "_": [
+                      0.119538,
+                      0.033105,
+                      0
+                    ]
+                  },
+                  "roughness": 0.38,
+                  "uuid": "3f528ec6-331b-4154-9091-1aae176b34c4"
+                },
+                "name": "BiomassVisual",
+                "nodeId": 65431,
+                "physicsOptions": {
+                  "enabled": false
+                },
+                "uuid": "c5003a8e-fef7-4136-9aea-bccd0669ef96"
+              },
+              {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "filter": "playerOnly",
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "ef408f9d-1f25-4fb0-b190-c97a804aa73a",
+                  "wireframe": true
+                },
+                "name": "Trigger",
+                "nodeId": 50616,
+                "physicsOptions": {
+                  "collisionProfile": "Trigger"
+                },
+                "scale": {
+                  "$bc": "v3",
+                  "_": [
+                    0.8,
+                    0.8,
+                    0.8
+                  ]
+                },
+                "selfHidden": false,
+                "uuid": "f787e627-3aa8-4fbe-934b-a69a891235fd"
+              }
+            ],
+            "name": "Biomass Pickup",
+            "nodeId": 27285,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                4.6,
+                0.7,
+                0
+              ]
+            },
+            "uuid": "7ee801b81a99bc3f"
+          }
+        ],
+        "name": "Scene 10",
+        "nodeId": 6833,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "df71d8b0d61ba7a7"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.SlimeMassGateNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": {
+              "$bc": "THREE.MeshStandardMaterial",
+              "color": {
+                "$bc": "c",
+                "_": [
+                  0.082283,
+                  0.135633,
+                  0.116971
+                ]
+              },
+              "metalness": 0.55,
+              "roughness": 0.38,
+              "uuid": "e07dec4c-4ae1-4d78-83d9-cc1a58760bc8"
+            },
+            "name": "Slime Mass Gate",
+            "nodeId": 52964,
+            "physicsOptions": {
+              "motionType": "kinematicPositionBased"
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                14,
+                2.25,
+                0
+              ]
+            },
+            "receiveShadow": true,
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                0.8,
+                3,
+                3
+              ]
+            },
+            "uuid": "372b73d8347793ad"
+          }
+        ],
+        "name": "Scene 11",
+        "nodeId": 65000,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "01cd3655e8a4743d"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.SlimeSwitchNode",
+            "children": [
+              {
+                "$bc": "ENGINE.MeshNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.CylinderGeometry",
+                  "_": [
+                    0.42,
+                    0.5,
+                    0.28,
+                    18,
+                    1,
+                    false
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshStandardMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      1,
+                      0.158961,
+                      0.072272
+                    ]
+                  },
+                  "emissive": {
+                    "$bc": "c",
+                    "_": [
+                      0.072272,
+                      0.005182,
+                      0.002428
+                    ]
+                  },
+                  "roughness": 0.5,
+                  "uuid": "7afeec1d-0b06-4c72-b9a3-4619d3cd79b4"
+                },
+                "name": "SwitchVisual",
+                "nodeId": 51452,
+                "physicsOptions": {
+                  "enabled": false
+                },
+                "uuid": "36504858-897c-4f99-a16e-0865a4c94100"
+              },
+              {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "filter": "playerOnly",
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "78fb8562-6ba0-4713-81bb-ba8d88869d27",
+                  "wireframe": true
+                },
+                "name": "Trigger",
+                "nodeId": 38537,
+                "physicsOptions": {
+                  "collisionProfile": "Trigger"
+                },
+                "scale": {
+                  "$bc": "v3",
+                  "_": [
+                    0.85,
+                    0.7,
+                    0.85
+                  ]
+                },
+                "selfHidden": false,
+                "uuid": "1d35a7d0-ee11-464f-be12-91ed46fd74b9"
+              }
+            ],
+            "name": "Slime Switch",
+            "nodeId": 16944,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                17,
+                0.22,
+                0
+              ]
+            },
+            "uuid": "db7970e7f47c15a1"
+          }
+        ],
+        "name": "Scene 12",
+        "nodeId": 33596,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "13c2262f5c5c7048"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.PrototypeExitNode",
+            "children": [
+              {
+                "$bc": "ENGINE.MeshNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.TorusGeometry",
+                  "_": [
+                    0.85,
+                    0.14,
+                    12,
+                    32
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshStandardMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0.274677,
+                      0.201556,
+                      1
+                    ]
+                  },
+                  "emissive": {
+                    "$bc": "c",
+                    "_": [
+                      0.0185,
+                      0.009134,
+                      0.127438
+                    ]
+                  },
+                  "roughness": 0.3,
+                  "uuid": "99f7497a-8ccc-4d0f-bd0a-f969aef04a20"
+                },
+                "name": "ExitVisual",
+                "nodeId": 30830,
+                "physicsOptions": {
+                  "enabled": false
+                },
+                "uuid": "ef437715-096c-408d-ac52-fe80d61df0eb"
+              },
+              {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "filter": "playerOnly",
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "661f998c-da62-4495-8b06-ae444f519338",
+                  "wireframe": true
+                },
+                "name": "Trigger",
+                "nodeId": 12590,
+                "physicsOptions": {
+                  "collisionProfile": "Trigger"
+                },
+                "scale": {
+                  "$bc": "v3",
+                  "_": [
+                    1.2,
+                    1.2,
+                    1.2
+                  ]
+                },
+                "selfHidden": false,
+                "uuid": "f89e4120-af4a-4b85-97f5-dce5d131ab38"
+              }
+            ],
+            "name": "Prototype Exit",
+            "nodeId": 35194,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                29,
+                6.8,
+                0
+              ]
+            },
+            "uuid": "7a3845f3c2974f50"
+          }
+        ],
+        "name": "Scene 13",
+        "nodeId": 45614,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "70250648fb4aee02"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "GAME.SlimePrototypeSpawnNode",
+            "name": "Slime Prototype Spawn",
+            "nodeId": 28468,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                -8,
+                0,
+                0
+              ]
+            },
+            "uuid": "cfe875504096c06b"
+          }
+        ],
+        "name": "Scene 14",
+        "nodeId": 10720,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "8f40c6cd2eace252"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.AmbientLightNode",
+            "children": [
+              {
+                "$ref": 1
+              }
+            ],
+            "light": {
+              "$ref": 1
+            },
+            "name": "Ambient Light",
+            "nodeId": 17318,
+            "uuid": "92deb883836fb574"
+          }
+        ],
+        "name": "Scene 15",
+        "nodeId": 46529,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "ec656b2d65a6734f"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.DirectionalLightNode",
+            "castShadow": true,
+            "children": [
+              {
+                "$ref": 2
+              }
+            ],
+            "light": {
+              "$ref": 2
+            },
+            "name": "Directional Light",
+            "nodeId": 10076,
+            "position": {
+              "$bc": "v3",
+              "_": [
+                -6,
+                14,
+                8
+              ]
+            },
+            "rotation": {
+              "$bc": "e",
+              "_": {
+                "$length": 3
+              }
+            },
+            "uuid": "e9638273e4c035b7"
+          }
+        ],
+        "name": "Scene 16",
+        "nodeId": 62725,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "949ea1e3725ea61c"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.FogNode",
+            "name": "Fog",
+            "nodeId": 58705,
+            "uuid": "f3eb14ecc5903fb6"
+          }
+        ],
+        "name": "Scene 17",
+        "nodeId": 12201,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "cd7e2de2cdae1f4f"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.SkyNode",
+            "children": {
+              "$length": 1
+            },
+            "name": "Sky",
+            "nodeId": 34187,
+            "uuid": "cfb713a97f043e1a"
+          }
+        ],
+        "name": "Scene 18",
+        "nodeId": 24953,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "1c9651e3e00f0004"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "castShadow": true,
+            "modelUrl": "@engine/assets/models/demo/SandboxAsset/Foliage/SM_SB_Fern01.glb",
+            "name": "Model Mesh",
+            "nodeId": 58193,
+            "physicsOptions": {
+              "enabled": false
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                -8,
+                0,
+                -0.8
+              ]
+            },
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                0.9,
+                0.9,
+                0.9
+              ]
+            },
+            "uuid": "0d0511e1894c86d0"
+          }
+        ],
+        "name": "Scene 19",
+        "nodeId": 19667,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "416e4d9202e5fa2e"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "castShadow": true,
+            "modelUrl": "@engine/assets/models/demo/SandboxAsset/Foliage/SM_SB_Fern01.glb",
+            "name": "Model Mesh 02",
+            "nodeId": 8074,
+            "physicsOptions": {
+              "enabled": false
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                11.5,
+                0,
+                -0.8
+              ]
+            },
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                0.75,
+                0.75,
+                0.75
+              ]
+            },
+            "uuid": "c8ccd1bdbaba6e62"
+          }
+        ],
+        "name": "Scene 20",
+        "nodeId": 6616,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "36efc230147f4cd7"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "castShadow": true,
+            "modelUrl": "@engine/assets/models/demo/LowPoly/SM_MushroomCluster01.glb",
+            "name": "Model Mesh 03",
+            "nodeId": 41422,
+            "physicsOptions": {
+              "enabled": false
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                6.2,
+                0,
+                -0.75
+              ]
+            },
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                0.8,
+                0.8,
+                0.8
+              ]
+            },
+            "uuid": "31a0302b4e2e0109"
+          }
+        ],
+        "name": "Scene 21",
+        "nodeId": 8823,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "c20dd9388a3aebb1"
+      },
+      {
+        "$bc": "ENGINE.SceneNode",
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "castShadow": true,
+            "modelUrl": "@engine/assets/models/demo/LowPoly/SM_MushroomCluster01.glb",
+            "name": "Model Mesh 04",
+            "nodeId": 53485,
+            "physicsOptions": {
+              "enabled": false
+            },
+            "position": {
+              "$bc": "v3",
+              "_": [
+                27.5,
+                6,
+                -0.75
+              ]
+            },
+            "scale": {
+              "$bc": "v3",
+              "_": [
+                0.7,
+                0.7,
+                0.7
+              ]
+            },
+            "uuid": "6fd2e14e29fbf7fe"
+          }
+        ],
+        "name": "Scene 22",
+        "nodeId": 34305,
+        "userData": {
+          "objectFlags": 4
+        },
+        "uuid": "6f7aa8ca5b5f7fc2"
+      }
+    ],
+    "editorData": {
+      "sceneTree": {
+        "children": [
+          {
+            "id": "folder-3c8e971a0c37ea7f",
+            "name": "Background",
+            "nodeType": "folder"
+          },
+          {
+            "id": "dbfff371c2dba4c9",
+            "nodeType": "actor"
+          },
+          {
+            "id": "2ed550b0a86074cc",
+            "nodeType": "actor"
+          },
+          {
+            "id": "509fb59c1a5b657e",
+            "nodeType": "actor"
+          },
+          {
+            "id": "08b2fc82975f40c3",
+            "nodeType": "actor"
+          },
+          {
+            "id": "361407fa07529b55",
+            "nodeType": "actor"
+          },
+          {
+            "id": "8b4a2d76d9900e66",
+            "nodeType": "actor"
+          },
+          {
+            "id": "1f7cf3938bce931e",
+            "nodeType": "actor"
+          },
+          {
+            "id": "4f5dccfb15eb3a6a",
+            "nodeType": "actor"
+          },
+          {
+            "id": "b8a4d38022917538",
+            "nodeType": "actor"
+          },
+          {
+            "id": "df71d8b0d61ba7a7",
+            "nodeType": "actor"
+          },
+          {
+            "id": "01cd3655e8a4743d",
+            "nodeType": "actor"
+          },
+          {
+            "id": "13c2262f5c5c7048",
+            "nodeType": "actor"
+          },
+          {
+            "id": "70250648fb4aee02",
+            "nodeType": "actor"
+          },
+          {
+            "id": "8f40c6cd2eace252",
+            "nodeType": "actor"
+          },
+          {
+            "id": "ec656b2d65a6734f",
+            "nodeType": "actor"
+          },
+          {
+            "id": "949ea1e3725ea61c",
+            "nodeType": "actor"
+          },
+          {
+            "id": "cd7e2de2cdae1f4f",
+            "nodeType": "actor"
+          },
+          {
+            "id": "1c9651e3e00f0004",
+            "nodeType": "actor"
+          },
+          {
+            "id": "416e4d9202e5fa2e",
+            "nodeType": "actor"
+          },
+          {
+            "id": "36efc230147f4cd7",
+            "nodeType": "actor"
+          },
+          {
+            "id": "c20dd9388a3aebb1",
+            "nodeType": "actor"
+          },
+          {
+            "id": "6f7aa8ca5b5f7fc2",
+            "nodeType": "actor"
+          }
+        ],
+        "id": "f27223c73249cb51",
+        "nodeType": "scene"
+      }
+    },
+    "gameModeClass": "GAME.Action2DGameMode",
+    "postProcessConfiguration": {
+      "effects": [
+        {
+          "enabled": true,
+          "exposure": 0.5,
+          "mode": 4,
+          "type": "toneMapping"
+        }
+      ]
+    },
+    "resources": null,
+    "settings": {
+      "gameModeClass": "GAME.Action2DGameMode"
+    },
+    "uuid": "f27223c73249cb51"
+  },
+  "$version": 3
+}

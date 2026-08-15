@@ -16,6 +16,10 @@ import { ExitActor } from './gameplay/ExitActor.js';
 import { HealthPickupActor } from './gameplay/HealthPickupActor.js';
 import { PlatformerMovementSettingsComponent } from './movement/PlatformerMovementSettingsComponent.js';
 import { PlayerHealthComponent } from './player/PlayerHealthComponent.js';
+import { SlimeCameraNode } from './slime/SlimeCameraNode.js';
+import { SlimeMovementSettingsNode } from './slime/SlimeMovement.js';
+import { SlimeMassNode } from './slime/SlimePawn.js';
+import { BiomassPickupNode, PrototypeExitNode, SlimeAnchorNode, SlimeMassGateNode } from './slime/SlimeWorldNodes.js';
 
 export function registerMetadata(): void {
   registerGeneratedClassMetadata(DynamicUVNodeMaterialAsset, { description: "World-space triplanar material. Samples the texture three times using\nworld-position XZ, XY, and YZ planes, then blends by the world normal —\nno per-mesh UV coordinates required." });
@@ -865,6 +869,192 @@ export function registerMetadata(): void {
         "max": 1,
         "step": 0.01,
         "description": "Seconds over which knockback distance is applied."
+      }
+    });
+
+  registerGeneratedPropertyMetadata(SlimeCameraNode, {
+      "camera": {
+        "type": "unknown",
+        "hidden": true
+      },
+      "distance": {
+        "type": "number",
+        "category": "Camera",
+        "min": 8,
+        "max": 50,
+        "step": 0.5
+      },
+      "offsetY": {
+        "type": "number",
+        "category": "Camera",
+        "min": -5,
+        "max": 10,
+        "step": 0.1
+      },
+      "followLambda": {
+        "type": "number",
+        "category": "Camera",
+        "min": 0.5,
+        "max": 30,
+        "step": 0.1
+      }
+    });
+
+  registerGeneratedPropertyMetadata(SlimeMovementSettingsNode, {
+      "smallSpeed": {
+        "type": "number",
+        "category": "Movement",
+        "min": 1,
+        "max": 20,
+        "step": 0.1
+      },
+      "mediumSpeed": {
+        "type": "number",
+        "category": "Movement",
+        "min": 1,
+        "max": 20,
+        "step": 0.1
+      },
+      "largeSpeed": {
+        "type": "number",
+        "category": "Movement",
+        "min": 1,
+        "max": 20,
+        "step": 0.1
+      },
+      "acceleration": {
+        "type": "number",
+        "category": "Movement",
+        "min": 1,
+        "max": 200,
+        "step": 1
+      },
+      "airControl": {
+        "type": "number",
+        "category": "Movement",
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      "gravity": {
+        "type": "number",
+        "category": "Movement",
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      "maxFallSpeed": {
+        "type": "number",
+        "category": "Movement",
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      "tetherPull": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      "swingAcceleration": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 60,
+        "step": 1
+      },
+      "releaseBoost": {
+        "type": "number",
+        "category": "Stretch",
+        "min": 0,
+        "max": 20,
+        "step": 0.25
+      }
+    });
+
+  registerGeneratedPropertyMetadata(SlimeMassNode, {
+      "initialOriginalMass": {
+        "type": "number",
+        "category": "Mass",
+        "min": 20,
+        "max": 500,
+        "step": 1
+      },
+      "minimumControlledMass": {
+        "type": "number",
+        "category": "Mass",
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      "minimumPieceMass": {
+        "type": "number",
+        "category": "Mass",
+        "min": 1,
+        "max": 20,
+        "step": 1
+      },
+      "maximumDetachedPieces": {
+        "type": "number",
+        "category": "Mass",
+        "min": 1,
+        "max": 12,
+        "step": 1
+      },
+      "splitChargeDuration": {
+        "type": "number",
+        "category": "Mass",
+        "min": 0.2,
+        "max": 3,
+        "step": 0.1
+      }
+    });
+
+  registerGeneratedPropertyMetadata(SlimeAnchorNode, {
+      "activationRadius": {
+        "type": "number",
+        "category": "Anchor",
+        "min": 2,
+        "max": 20,
+        "step": 0.25
+      }
+    });
+
+  registerGeneratedPropertyMetadata(BiomassPickupNode, {
+      "massValue": {
+        "type": "number",
+        "category": "Biomass",
+        "min": 1,
+        "max": 200,
+        "step": 1
+      }
+    });
+
+  registerGeneratedPropertyMetadata(SlimeMassGateNode, {
+      "openHeight": {
+        "type": "number",
+        "category": "Gate",
+        "min": 1,
+        "max": 12,
+        "step": 0.25
+      },
+      "openSpeed": {
+        "type": "number",
+        "category": "Gate",
+        "min": 0.25,
+        "max": 8,
+        "step": 0.25
+      }
+    });
+
+  registerGeneratedPropertyMetadata(PrototypeExitNode, {
+      "requiredMass": {
+        "type": "number",
+        "category": "Exit",
+        "min": 1,
+        "max": 500,
+        "step": 1
       }
     });
 

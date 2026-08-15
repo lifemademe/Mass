@@ -1,5 +1,5 @@
 {
-  "defaultScene": "./assets/default.genesys-scene",
+  "defaultScene": "./assets/slime-prototype.genesys-scene",
   "engineVersion": "14.0.10-staging",
   "assetCompiler": {
     "enabled": false,
