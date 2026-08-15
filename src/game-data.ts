@@ -19,7 +19,7 @@ import { PlayerHealthComponent } from './player/PlayerHealthComponent.js';
 import { SlimeCameraNode } from './slime/SlimeCameraNode.js';
 import { SlimeMovementSettingsNode } from './slime/SlimeMovement.js';
 import { SlimeMassNode } from './slime/SlimePawn.js';
-import { BiomassPickupNode, MomentumSwitchNode, PrototypeExitNode, SlimeAnchorNode, SlimeMassGateNode } from './slime/SlimeWorldNodes.js';
+import { BiomassPickupNode, MomentumSwitchNode, PrototypeExitNode, SlimeAnchorNode, SlimeMassGateNode, VerticalCheckpointNode } from './slime/SlimeWorldNodes.js';
 
 export function registerMetadata(): void {
   registerGeneratedClassMetadata(DynamicUVNodeMaterialAsset, { description: "World-space triplanar material. Samples the texture three times using\nworld-position XZ, XY, and YZ planes, then blends by the world normal —\nno per-mesh UV coordinates required." });
@@ -1220,6 +1220,16 @@ export function registerMetadata(): void {
       "completesGame": {
         "type": "boolean",
         "category": "Exit"
+      }
+    });
+
+  registerGeneratedPropertyMetadata(VerticalCheckpointNode, {
+      "checkpointIndex": {
+        "type": "number",
+        "category": "Checkpoint",
+        "min": 1,
+        "max": 10,
+        "step": 1
       }
     });
 

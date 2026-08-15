@@ -11,8 +11,9 @@ import type { SlimeAnchorNode, SlimePieceNode } from './SlimeWorldNodes.js';
 
 const MOVEMENT_MODE = 'slimeMovement';
 const MEDIUM_RADIUS = 0.48;
-const RELEASE_FOCUS_TIME_SCALE = 0.65;
-const RELEASE_FOCUS_DURATION = 0.3;
+const RELEASE_FOCUS_TIME_SCALE = 0.75;
+const RELEASE_FOCUS_DURATION = 0.35;
+const RELEASE_STEERING_LOCK_DURATION = 0.5;
 
 export type SlimeSizeTier = 'small' | 'medium' | 'large';
 
@@ -55,8 +56,12 @@ export class SlimeMassNode extends ENGINE.SceneNode {
 export class SlimePawn extends ENGINE.Pawn {
   private collider!: ENGINE.MeshNode;
   private visual!: ENGINE.MeshNode;
+  private faceRoot!: ENGINE.SceneNode;
   private tetherVisual!: ENGINE.MeshNode;
+  private stretchShoulder!: ENGINE.MeshNode;
+  private stretchTip!: ENGINE.MeshNode;
   private senseVisual!: ENGINE.MeshNode;
+  private slimeGlow!: ENGINE.PointLightNode;
   private mover!: ENGINE.MoverNode;
   private cameraNode!: SlimeCameraNode;
   private massSettings!: SlimeMassNode;
@@ -84,6 +89,10 @@ export class SlimePawn extends ENGINE.Pawn {
   private readonly lastTrailPosition = new THREE.Vector3();
   private focusRemaining = 0;
   private focusCooldown = 0;
+  private releaseSteeringLockRemaining = 0;
+  private stretchReleaseRemaining = 0;
+  private readonly lastStretchDirection = new THREE.Vector3(0, 1, 0);
+  private lastStretchDistance = 0;
 
   constructor() {
     super();
@@ -115,15 +124,16 @@ export class SlimePawn extends ENGINE.Pawn {
     this.mover.startingModeName = MOVEMENT_MODE;
 
     const slimeMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x63ffd0,
-      emissive: 0x08281f,
-      roughness: 0.22,
+      color: 0xb7db5d,
+      emissive: 0x2a4f13,
+      emissiveIntensity: 1.25,
+      roughness: 0.34,
       metalness: 0,
-      transmission: 0.28,
+      transmission: 0.12,
       transparent: true,
-      opacity: 0.92,
+      opacity: 0.96,
       clearcoat: 1,
-      clearcoatRoughness: 0.15,
+      clearcoatRoughness: 0.24,
     });
     this.visual = ENGINE.MeshNode.create({
       name: 'SlimeVisual',
@@ -132,16 +142,46 @@ export class SlimePawn extends ENGINE.Pawn {
       physicsOptions: { enabled: false },
       castShadow: true,
     });
+    this.faceRoot = ENGINE.SceneNode.create({ name: 'Mass Face' });
+    this.addFace();
     this.tetherVisual = this.createStretchVisual(slimeMaterial.clone());
+    this.stretchShoulder = ENGINE.MeshNode.create({
+      name: 'StretchShoulder',
+      geometry: new THREE.SphereGeometry(1, 18, 12),
+      material: slimeMaterial.clone(),
+      physicsOptions: { enabled: false },
+      castShadow: true,
+    });
+    this.stretchShoulder.visible = false;
+    this.stretchTip = ENGINE.MeshNode.create({
+      name: 'StretchTip',
+      geometry: new THREE.SphereGeometry(1, 18, 12),
+      material: slimeMaterial.clone(),
+      physicsOptions: { enabled: false },
+      castShadow: true,
+    });
+    this.stretchTip.visible = false;
     this.senseVisual = this.createSenseVisual();
+    this.slimeGlow = ENGINE.PointLightNode.create({
+      name: 'Mass Bio Glow',
+      color: 0xb6e866,
+      intensity: 1.8,
+      distance: 4.6,
+      decay: 2,
+      position: new THREE.Vector3(0, 0.2, 1.3),
+    });
     this.cameraNode = SlimeCameraNode.create({ name: 'SlimeCamera' });
     this.add(
       this.massSettings,
       this.movementSettings,
       this.mover,
       this.visual,
+      this.faceRoot,
       this.tetherVisual,
+      this.stretchShoulder,
+      this.stretchTip,
       this.senseVisual,
+      this.slimeGlow,
       this.cameraNode,
     );
     this.applyMassVisuals(true);
@@ -182,6 +222,10 @@ export class SlimePawn extends ENGINE.Pawn {
     return this.focusRemaining > 0 ? RELEASE_FOCUS_TIME_SCALE : 1;
   }
 
+  public isReleaseSteeringLocked(): boolean {
+    return this.releaseSteeringLockRemaining > 0;
+  }
+
   public getAnchorAimTolerance(): number {
     return this.focusRemaining > 0 ? 2.35 : 1.5;
   }
@@ -219,6 +263,8 @@ export class SlimePawn extends ENGINE.Pawn {
 
   public teleportTo(position: THREE.Vector3): void {
     this.releaseStretch();
+    this.resetStretchPresentation();
+    this.releaseSteeringLockRemaining = 0;
     const sync = this.mover.getSyncState() as ENGINE.MovementSyncState;
     sync.position.copy(position);
     sync.velocity.set(0, 0, 0);
@@ -269,6 +315,7 @@ export class SlimePawn extends ENGINE.Pawn {
     ) ?? null;
     if (!anchor) return;
     this.focusRemaining = 0;
+    this.releaseSteeringLockRemaining = 0;
     this.tetherAnchor = anchor;
     let targetLength = anchor.preferredTetherLength > 0
       ? anchor.preferredTetherLength
@@ -284,6 +331,9 @@ export class SlimePawn extends ENGINE.Pawn {
     this.tetherIdleExtension = 0;
     anchor.setHighlighted(true, true);
     this.tetherVisual.visible = true;
+    this.stretchShoulder.visible = true;
+    this.stretchTip.visible = true;
+    this.stretchReleaseRemaining = 0;
     context?.playFeedback('attach', anchor.getWorldPosition());
     this.cameraNode.addImpulse(0.08);
     context?.setPhase('feed');
@@ -304,7 +354,8 @@ export class SlimePawn extends ENGINE.Pawn {
     this.tetherRestLength = 0;
     this.tetherIdleElapsed = 0;
     this.tetherIdleExtension = 0;
-    this.tetherVisual.visible = false;
+    this.stretchReleaseRemaining = 0.18;
+    this.releaseSteeringLockRemaining = RELEASE_STEERING_LOCK_DURATION;
     if (this.focusCooldown <= 0) {
       this.focusRemaining = RELEASE_FOCUS_DURATION;
       this.focusCooldown = 0.55;
@@ -348,8 +399,16 @@ export class SlimePawn extends ENGINE.Pawn {
   public override tickPrePhysics(deltaTime: number): void {
     super.tickPrePhysics(deltaTime);
     this.elapsed += deltaTime;
+    if (this.getWorldPosition().y < -4) {
+      getSlimeGameContext(this.getWorld())?.recoverFromVerticalFall();
+    }
     this.focusRemaining = Math.max(0, this.focusRemaining - deltaTime);
     this.focusCooldown = Math.max(0, this.focusCooldown - deltaTime);
+    this.releaseSteeringLockRemaining = Math.max(
+      0,
+      this.releaseSteeringLockRemaining - deltaTime,
+    );
+    this.stretchReleaseRemaining = Math.max(0, this.stretchReleaseRemaining - deltaTime);
     this.updateTetherLength(deltaTime);
     if (this.splitCharging) {
       this.splitChargeElapsed = Math.min(
@@ -373,17 +432,40 @@ export class SlimePawn extends ENGINE.Pawn {
     this.wasGrounded = grounded;
     this.lastVerticalSpeed = velocity.y;
     const radius = visualRadiusForMass(this.controlledMass);
-    const speedStretch = THREE.MathUtils.clamp(Math.abs(velocity.x) / 18, 0, 0.18);
+    const speedStretch = THREE.MathUtils.clamp(velocity.length() / 24, 0, 0.16);
     const wobble = Math.sin(this.elapsed * 7) * 0.025;
-    this.visual.scale.set(
-      radius * (1 + speedStretch),
-      radius * (0.86 - speedStretch * 0.5 + wobble),
-      radius * 0.92,
-    );
-
     if (this.tetherAnchor) {
-      this.updateLineVisual(this.tetherVisual, this.tetherAnchor.getWorldPosition());
+      const target = this.tetherAnchor.getWorldPosition();
+      const delta = target.clone().sub(this.getWorldPosition());
+      const distance = Math.max(delta.length(), 0.001);
+      this.lastStretchDirection.copy(delta).multiplyScalar(1 / distance);
+      this.lastStretchDistance = distance;
+      this.updateOrganicStretch(target, radius, velocity.length());
+    } else if (this.stretchReleaseRemaining > 0) {
+      const recoilAlpha = THREE.MathUtils.smoothstep(this.stretchReleaseRemaining, 0, 0.18);
+      const recoilDistance = Math.max(radius * 0.3, this.lastStretchDistance * recoilAlpha);
+      const target = this.getWorldPosition().clone().addScaledVector(this.lastStretchDirection, recoilDistance);
+      this.updateOrganicStretch(target, radius, velocity.length());
+    } else {
+      this.resetStretchPresentation();
+      const velocityAngle = velocity.lengthSq() > 2
+        ? -Math.atan2(velocity.x, velocity.y)
+        : 0;
+      this.visual.rotation.z = THREE.MathUtils.lerp(this.visual.rotation.z, velocityAngle, 0.08);
+      this.visual.scale.set(
+        radius * (1 - speedStretch * 0.35),
+        radius * (0.86 + speedStretch + wobble),
+        radius * 0.92,
+      );
     }
+    // The slime body can squash, stretch, and rotate with momentum, but its
+    // expression stays readable and level like a hand-animated 2D character.
+    this.faceRoot.rotation.set(0, 0, 0);
+    this.faceRoot.scale.setScalar(radius);
+    this.slimeGlow.intensity = 1.45 + Math.min(this.controlledMass / 220, 0.75)
+      + (this.tetherAnchor ? 0.32 : 0)
+      + Math.sin(this.elapsed * 3.1) * 0.08;
+    this.slimeGlow.distance = 4.1 + Math.min(this.controlledMass / 100, 1.4);
     if (this.senseVisualRemaining > 0 && this.senseTarget?.isPlaying()) {
       this.senseVisualRemaining -= deltaTime;
       this.updateLineVisual(this.senseVisual, this.senseTarget.getWorldPosition());
@@ -462,12 +544,16 @@ export class SlimePawn extends ENGINE.Pawn {
   private bindChildren(): void {
     this.collider = this.getNodes(ENGINE.MeshNode).find((node) => node.name === 'SlimeCollider') ?? this.collider;
     this.visual = this.getNodes(ENGINE.MeshNode).find((node) => node.name === 'SlimeVisual') ?? this.visual;
+    this.faceRoot = this.getNodes(ENGINE.SceneNode).find((node) => node.name === 'Mass Face') ?? this.faceRoot;
     this.tetherVisual = this.getNodes(ENGINE.MeshNode).find((node) => node.name === 'StretchTendril') ?? this.tetherVisual;
+    this.stretchShoulder = this.getNodes(ENGINE.MeshNode).find((node) => node.name === 'StretchShoulder') ?? this.stretchShoulder;
+    this.stretchTip = this.getNodes(ENGINE.MeshNode).find((node) => node.name === 'StretchTip') ?? this.stretchTip;
     this.senseVisual = this.getNodes(ENGINE.MeshNode).find((node) => node.name === 'SenseTendril') ?? this.senseVisual;
     this.mover = this.getNode(ENGINE.MoverNode) ?? this.mover;
     this.cameraNode = this.getNode(SlimeCameraNode) ?? this.cameraNode;
     this.massSettings = this.getNode(SlimeMassNode) ?? this.massSettings;
     this.movementSettings = this.getNode(SlimeMovementSettingsNode) ?? this.movementSettings;
+    this.slimeGlow = this.getNodes(ENGINE.PointLightNode).find((node) => node.name === 'Mass Bio Glow') ?? this.slimeGlow;
     this.mover.addMovementMode(MOVEMENT_MODE, new SlimeMovementMode());
     this.mover.startingModeName = MOVEMENT_MODE;
   }
@@ -475,12 +561,46 @@ export class SlimePawn extends ENGINE.Pawn {
   private createStretchVisual(material: THREE.Material): ENGINE.MeshNode {
     const line = ENGINE.MeshNode.create({
       name: 'StretchTendril',
-      geometry: new THREE.CylinderGeometry(0.1, 0.14, 1, 12),
+      geometry: new THREE.CylinderGeometry(0.075, 0.34, 1, 18, 5),
       material,
       physicsOptions: { enabled: false },
     });
     line.visible = false;
     return line;
+  }
+
+  private addFace(): void {
+    const ink = new THREE.MeshBasicMaterial({ color: 0x07100b });
+    const shine = new THREE.MeshBasicMaterial({ color: 0xf4ffd5 });
+    const createEye = (name: string, x: number): void => {
+      const eye = ENGINE.MeshNode.create({
+        name,
+        geometry: new THREE.SphereGeometry(0.17, 14, 10),
+        material: ink,
+        position: new THREE.Vector3(x, 0.1, 0.91),
+        scale: new THREE.Vector3(0.78, 1.12, 0.32),
+        physicsOptions: { enabled: false },
+      });
+      const glint = ENGINE.MeshNode.create({
+        name: `${name} Glint`,
+        geometry: new THREE.SphereGeometry(0.045, 8, 6),
+        material: shine,
+        position: new THREE.Vector3(-0.03, 0.05, 0.16),
+        physicsOptions: { enabled: false },
+      });
+      eye.add(glint);
+      this.faceRoot.add(eye);
+    };
+    createEye('Mass Left Eye', -0.25);
+    createEye('Mass Right Eye', 0.25);
+    this.faceRoot.add(ENGINE.MeshNode.create({
+      name: 'Mass Mouth',
+      geometry: new THREE.SphereGeometry(0.12, 12, 8),
+      material: ink,
+      position: new THREE.Vector3(0, -0.18, 0.93),
+      scale: new THREE.Vector3(0.95, 0.28, 0.25),
+      physicsOptions: { enabled: false },
+    }));
   }
 
   private createSenseVisual(): ENGINE.MeshNode {
@@ -501,6 +621,49 @@ export class SlimePawn extends ENGINE.Pawn {
     line.position.copy(targetWorld.clone().add(origin).multiplyScalar(0.5).sub(origin));
     line.rotation.set(0, 0, -Math.atan2(delta.x, delta.y));
     line.scale.set(1, distance, 1);
+  }
+
+  private updateOrganicStretch(targetWorld: THREE.Vector3, radius: number, speed: number): void {
+    const origin = this.getWorldPosition();
+    const delta = targetWorld.clone().sub(origin);
+    const distance = Math.max(delta.length(), 0.001);
+    const direction = delta.clone().multiplyScalar(1 / distance);
+    const angle = -Math.atan2(delta.x, delta.y);
+    const tension = THREE.MathUtils.clamp((distance - radius) / Math.max(this.getStretchRange(), 1), 0, 1);
+    const wobble = Math.sin(this.elapsed * 8.5 + distance) * Math.min(0.035, speed * 0.0018);
+
+    this.tetherVisual.visible = true;
+    this.stretchShoulder.visible = true;
+    this.stretchTip.visible = true;
+    this.tetherVisual.position.copy(direction).multiplyScalar(distance * 0.5 + radius * 0.08);
+    this.tetherVisual.position.x += -direction.y * wobble;
+    this.tetherVisual.position.y += direction.x * wobble;
+    this.tetherVisual.rotation.set(0, 0, angle);
+    this.tetherVisual.scale.set(1 + tension * 0.28, Math.max(0.05, distance - radius * 0.18), 0.84);
+
+    this.stretchShoulder.position.copy(direction).multiplyScalar(radius * 0.56);
+    this.stretchShoulder.rotation.set(0, 0, angle);
+    this.stretchShoulder.scale.set(
+      radius * (0.66 - tension * 0.15),
+      radius * (1.08 + tension * 1.12),
+      radius * (0.7 - tension * 0.08),
+    );
+    this.stretchTip.position.copy(direction).multiplyScalar(Math.max(radius, distance - 0.08));
+    this.stretchTip.scale.setScalar(radius * 0.18);
+
+    this.visual.rotation.z = angle;
+    this.visual.scale.set(
+      radius * (0.92 - tension * 0.2),
+      radius * (0.88 + tension * 0.62 + Math.sin(this.elapsed * 6.5) * 0.018),
+      radius * (0.92 - tension * 0.09),
+    );
+  }
+
+  private resetStretchPresentation(): void {
+    this.tetherVisual.visible = false;
+    this.stretchShoulder.visible = false;
+    this.stretchTip.visible = false;
+    this.stretchReleaseRemaining = 0;
   }
 
   private getSplitPreviewAmount(): number {
@@ -544,6 +707,7 @@ export class SlimePawn extends ENGINE.Pawn {
     }
     const radius = visualRadiusForMass(this.controlledMass);
     this.visual?.scale.set(radius, radius * 0.86, radius * 0.92);
+    this.faceRoot?.scale.setScalar(radius);
   }
 
   public override getEditorClassIcon(): string | null {

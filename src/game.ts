@@ -8,6 +8,7 @@
 import * as ENGINE from '@gnsx/genesys.js';
 
 import { SlimePrototypeGameMode } from './slime/SlimePrototypeGameMode.js';
+import { initializeMassBootScreen } from './ui/MassBootScreen.js';
 
 class MyGame extends ENGINE.BaseGameLoop {
   protected override resolveStartupGameMode(_sceneData: unknown): ENGINE.GameMode {
@@ -16,6 +17,7 @@ class MyGame extends ENGINE.BaseGameLoop {
 }
 
 export function main(container: HTMLElement, options?: Partial<ENGINE.BaseGameLoopOptions>): ENGINE.IGameLoop {
+  initializeMassBootScreen(container);
   const mergedOptions: Partial<ENGINE.BaseGameLoopOptions> = {
     ...options,
     defaultGameModeClass: SlimePrototypeGameMode,

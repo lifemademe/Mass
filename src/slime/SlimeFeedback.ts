@@ -12,6 +12,7 @@ export type SlimeFeedbackEvent =
   | 'sense'
   | 'reunion'
   | 'switch'
+  | 'checkpoint'
   | 'stage'
   | 'complete';
 
@@ -35,6 +36,7 @@ const SOUND_CUES: Record<SlimeFeedbackEvent, SlimeSoundCue> = {
   sense: { url: '@project/assets/audio/checkpoint.wav', volume: 0.24 },
   reunion: { url: '@project/assets/audio/checkpoint.wav', volume: 0.55 },
   switch: { url: '@project/assets/audio/checkpoint.wav', volume: 0.48 },
+  checkpoint: { url: '@project/assets/audio/checkpoint.wav', volume: 0.42 },
   stage: { url: '@project/assets/audio/checkpoint.wav', volume: 0.7, global: true },
   complete: { url: '@project/assets/audio/level-complete.wav', volume: 0.82, global: true },
 };
@@ -51,6 +53,7 @@ const VFX_CUES: Partial<Record<SlimeFeedbackEvent, SlimeVfxCue>> = {
   sense: { path: SLIME_BURST, scale: 0.3 },
   reunion: { path: SLIME_BURST, scale: 1.05 },
   switch: { path: AMBER_BURST, scale: 0.48 },
+  checkpoint: { path: SLIME_BURST, scale: 0.72 },
   stage: { path: SLIME_BURST, scale: 1.2 },
   complete: { path: SLIME_BURST, scale: 1.65 },
 };
@@ -82,6 +85,7 @@ export class SlimeFeedbackSystem {
     else this.spawnVfx(event, position);
     if (event === 'land') this.spawnShockwave(position, 0x75ffd3, 1.15, 0.42);
     else if (event === 'reunion') this.spawnShockwave(position, 0x75ffd3, 2.1, 0.65);
+    else if (event === 'checkpoint') this.spawnShockwave(position, 0xc7ff9b, 1.55, 0.52);
     else if (event === 'stage') this.spawnShockwave(position, 0xc7ff9b, 2.5, 0.75);
     else if (event === 'complete') this.spawnShockwave(position, 0xd7f7b7, 3.2, 0.85);
   }

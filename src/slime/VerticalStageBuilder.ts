@@ -1,11 +1,14 @@
 import * as ENGINE from '@gnsx/genesys.js';
 import * as THREE from 'three';
 
+import { createSlimeBackdrop, createSlimeHaze, createSlimeOccluder } from './SlimeBackdrop.js';
+import { MASS_VISUAL_ASSETS } from './MassArtDirection.js';
 import {
   MomentumSwitchNode,
   PrototypeBlockNode,
   PrototypeExitNode,
   SlimeAnchorNode,
+  VerticalCheckpointNode,
 } from './SlimeWorldNodes.js';
 
 const BASE_X = 80;
@@ -83,7 +86,48 @@ export class VerticalStageBuilder {
     ledge('Right Rest Ledge I', BASE_X + 7.6, 14.1, 3.4, 0.7);
     ledge('Left Rest Ledge II', BASE_X - 7.6, 21.1, 3.4, 0.7);
     ledge('Right Rest Ledge II', BASE_X + 7.6, 28.2, 3.4, 0.7);
-    ledge('Canopy Crown', BASE_X, 35.5, 10, 1);
+    ledge('Canopy Crown', BASE_X - 1.5, 35.5, 10, 1);
+
+    add(createSlimeBackdrop({
+      name: 'Stage II Far Living Shaft',
+      texturePath: MASS_VISUAL_ASSETS.stage2Far,
+      position: new THREE.Vector3(BASE_X, 20, 0.15),
+      size: new THREE.Vector2(34, 60.4),
+      parallaxRatio: 0.3,
+      axis: 'vertical',
+      renderOrder: 40,
+    }));
+    add(createSlimeHaze(
+      'Stage II Distant Haze',
+      new THREE.Vector3(BASE_X, 20, 0.2),
+      new THREE.Vector2(36, 64),
+      'vertical',
+    ));
+    add(createSlimeBackdrop({
+      name: 'Stage II Midground Framing',
+      texturePath: MASS_VISUAL_ASSETS.stage2Mid,
+      position: new THREE.Vector3(BASE_X, 20, 0.25),
+      size: new THREE.Vector2(34, 60.4),
+      parallaxRatio: 0.6,
+      axis: 'vertical',
+      renderOrder: 50,
+    }));
+    add(createSlimeBackdrop({
+      name: 'Stage II Foreground Props',
+      texturePath: MASS_VISUAL_ASSETS.stage2Foreground,
+      position: new THREE.Vector3(BASE_X, 20, 2.8),
+      size: new THREE.Vector2(24, 42.7),
+      parallaxRatio: 0.9,
+      axis: 'vertical',
+      renderOrder: 70,
+      maskBlack: true,
+    }));
+    add(createSlimeOccluder(
+      'Stage II Foreground Occluder',
+      new THREE.Vector3(BASE_X, 20, 3.2),
+      new THREE.Vector2(25, 44.4),
+      'vertical',
+    ));
 
     const anchorSpecs: Array<[string, number, number, number, boolean]> = [
       ['Root Growth', BASE_X, 5.1, 4.1, false],
@@ -91,7 +135,8 @@ export class VerticalStageBuilder {
       ['Switch Sling Growth', BASE_X + 1.6, 14.6, 2.5, false],
       ['Dormant Right Growth', BASE_X + 3.8, 18.5, 4.2, true],
       ['Dormant Upper Left Growth', BASE_X - 3.6, 25, 4.15, true],
-      ['Dormant Upper Right Growth', BASE_X + 3.6, 32, 4.05, true],
+      ['Dormant Upper Right Growth', BASE_X + 6.2, 33.4, 4.05, true],
+      ['Dormant Canopy Growth', BASE_X, 40.2, 3.6, true],
     ];
     for (const [name, x, y, tetherLength, dormant] of anchorSpecs) {
       const anchor = SlimeAnchorNode.create({ name, position: new THREE.Vector3(x, y, 0) });
@@ -109,6 +154,20 @@ export class VerticalStageBuilder {
           position: new THREE.Vector3(x, y, 1.8),
         }));
       }
+    }
+
+    const checkpointSpecs: Array<[string, number, number, number]> = [
+      ['Lower Root Memory', 1, BASE_X + 7.6, 14.95],
+      ['Middle Root Memory', 2, BASE_X - 7.6, 21.95],
+      ['Upper Root Memory', 3, BASE_X + 7.6, 29.05],
+    ];
+    for (const [name, index, x, y] of checkpointSpecs) {
+      const checkpoint = VerticalCheckpointNode.create({
+        name,
+        position: new THREE.Vector3(x, y, 0.3),
+      });
+      checkpoint.checkpointIndex = index;
+      add(checkpoint);
     }
 
     block('Momentum Wall', BASE_X + 9.25, 12.5, 0.8, 5.2);
@@ -129,19 +188,6 @@ export class VerticalStageBuilder {
     exit.requiredMass = 130;
     exit.completesGame = true;
     add(exit);
-
-    const backdropMaterial = new THREE.MeshStandardMaterial({
-      color: 0x030b08,
-      emissive: 0x06150e,
-      roughness: 1,
-    });
-    add(visual(
-      'Living Shaft Backdrop',
-      new THREE.BoxGeometry(1, 1, 1),
-      backdropMaterial,
-      new THREE.Vector3(BASE_X, 18, -3.4),
-      new THREE.Vector3(23, 39, 1),
-    ));
 
     const archMaterial = new THREE.MeshStandardMaterial({
       color: 0x0b1812,

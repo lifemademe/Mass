@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import type { MassRecord } from './MassLedger.js';
 import { SlimePawn, visualRadiusForMass } from './SlimePawn.js';
 import { getSlimeGameContext } from './SlimeRuntime.js';
+import { MASS_VISUAL_ASSETS } from './MassArtDirection.js';
 
 const PIECE_RETURN_SPEED = 5.5;
 const PIECE_RETURN_HOP_HEIGHT = 0.28;
@@ -11,10 +12,10 @@ const PIECE_RETURN_HOP_RATE = 8;
 
 function makeStoneMaterial(): THREE.MeshStandardMaterial {
   return new THREE.MeshStandardMaterial({
-    color: 0x354b42,
-    emissive: 0x0c1e17,
-    emissiveIntensity: 0.72,
-    roughness: 0.92,
+    color: 0x8f9a81,
+    emissive: 0x091611,
+    emissiveIntensity: 0.48,
+    roughness: 0.88,
     metalness: 0,
   });
 }
@@ -46,6 +47,28 @@ export class PrototypeBlockNode extends ENGINE.MeshNode {
       ...options,
     });
   }
+
+  public override beginPlay(): boolean {
+    if (!super.beginPlay()) return false;
+    void ENGINE.resourceManager
+      .loadTexture(ENGINE.AssetPath.fromString(MASS_VISUAL_ASSETS.masonryTile))
+      .then((sourceTexture) => {
+        if (!sourceTexture || !(this.material instanceof THREE.MeshStandardMaterial)) return;
+        const texture = sourceTexture.clone();
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.flipY = false;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(
+          Math.max(1, Math.abs(this.scale.x) / 2.2),
+          Math.max(1, Math.abs(this.scale.y) / 2.2),
+        );
+        texture.needsUpdate = true;
+        this.material.map = texture;
+        this.material.needsUpdate = true;
+      });
+    return true;
+  }
 }
 
 @ENGINE.GameClass()
@@ -64,6 +87,7 @@ export class SlimeAnchorNode extends ENGINE.MeshNode {
   private elapsed = 0;
   private dormant = false;
   private readonly restingScale = new THREE.Vector3(1, 1, 1);
+  private bushVisual: ENGINE.MeshNode | null = null;
 
   constructor() {
     super();
@@ -87,6 +111,20 @@ export class SlimeAnchorNode extends ENGINE.MeshNode {
     if (!super.beginPlay()) return false;
     this.restingScale.copy(this.scale);
     this.dormant = this.startsDormant;
+    this.bushVisual = this.createBushVisual();
+    this.bushVisual.isRoot = true;
+    this.getWorld()?.add(this.bushVisual);
+    void ENGINE.resourceManager
+      .loadTexture(ENGINE.AssetPath.fromString(MASS_VISUAL_ASSETS.growthBush))
+      .then((texture) => {
+        const bushMaterial = this.bushVisual?.material;
+        if (!texture || !(bushMaterial instanceof THREE.MeshBasicMaterial)) return;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.flipY = false;
+        texture.needsUpdate = true;
+        bushMaterial.map = texture;
+        bushMaterial.needsUpdate = true;
+      });
     this.applyAppearance();
     getSlimeGameContext(this.getWorld())?.registerAnchor(this);
     return true;
@@ -94,6 +132,8 @@ export class SlimeAnchorNode extends ENGINE.MeshNode {
 
   public override endPlay(): boolean {
     getSlimeGameContext(this.getWorld())?.unregisterAnchor(this);
+    this.bushVisual?.destroy();
+    this.bushVisual = null;
     return super.endPlay();
   }
 
@@ -120,6 +160,12 @@ export class SlimeAnchorNode extends ENGINE.MeshNode {
     const pulse = Math.sin(this.elapsed * (this.highlighted ? 6.5 : 2.4) + this.position.x * 0.31);
     const scale = 1 + pulse * (this.highlighted ? 0.1 : 0.045);
     this.scale.copy(this.restingScale).multiplyScalar(scale);
+    if (this.bushVisual) {
+      this.bushVisual.position.copy(this.getWorldPosition());
+      this.bushVisual.position.y -= 0.24;
+      this.bushVisual.position.z = -1.62;
+      this.bushVisual.scale.set(3.15 * scale, 1.58 * scale, 1);
+    }
     const material = this.material;
     if (material instanceof THREE.MeshStandardMaterial) {
       const baseIntensity = this.dormant ? 1.65 : 1.15;
@@ -130,13 +176,53 @@ export class SlimeAnchorNode extends ENGINE.MeshNode {
   private applyAppearance(): void {
     const material = this.material;
     if (!(material instanceof THREE.MeshStandardMaterial)) return;
+    const bushMaterial = this.bushVisual?.material;
     if (this.dormant) {
       material.color.setHex(this.highlighted ? 0xff5a62 : 0xb92f3c);
       material.emissive.setHex(this.highlighted ? 0x851720 : 0x4c0b12);
+      if (bushMaterial instanceof THREE.MeshBasicMaterial) {
+        bushMaterial.color.setHex(this.highlighted ? 0xff7779 : 0xc94d55);
+        bushMaterial.opacity = this.highlighted ? 1 : 0.82;
+      }
       return;
     }
     material.color.setHex(this.highlighted ? (this.valid ? 0xb7ff8d : 0xff4b53) : 0x79ec86);
     material.emissive.setHex(this.highlighted ? (this.valid ? 0x428c2d : 0x75131b) : 0x1d5525);
+    if (bushMaterial instanceof THREE.MeshBasicMaterial) {
+      bushMaterial.color.setHex(this.highlighted
+        ? (this.valid ? 0xc8ff9d : 0xff6a70)
+        : 0x7fcf78);
+      bushMaterial.opacity = this.highlighted ? 1 : 0.9;
+    }
+  }
+
+  private createBushVisual(): ENGINE.MeshNode {
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.94,
+      alphaTest: 0.015,
+      depthWrite: false,
+      depthTest: false,
+      fog: false,
+      side: THREE.DoubleSide,
+    });
+    const position = this.getWorldPosition();
+    position.y -= 0.24;
+    position.z = -1.62;
+    const bush = ENGINE.MeshNode.create({
+      name: `${this.name} Bush`,
+      geometry: new THREE.PlaneGeometry(1, 1),
+      material,
+      position,
+      scale: new THREE.Vector3(3.15, 1.58, 1),
+      castShadow: false,
+      receiveShadow: false,
+      physicsOptions: { enabled: false },
+    });
+    bush.renderOrder = 95;
+    bush.frustumCulled = false;
+    return bush;
   }
 }
 
@@ -453,6 +539,49 @@ export class PrototypeExitNode extends SlimeTriggerActor {
         material.emissive.setHex(0x1f8067);
       }
     }
+  }
+}
+
+@ENGINE.GameClass()
+export class VerticalCheckpointNode extends SlimeTriggerActor {
+  @ENGINE.property({ type: 'number', category: 'Checkpoint', min: 1, max: 10, step: 1 })
+  public checkpointIndex = 1;
+
+  private elapsed = 0;
+
+  public override initialize(options?: ENGINE.SceneNodeOptions): void {
+    super.initialize(options);
+    const visual = ENGINE.MeshNode.create({
+      name: 'CheckpointBloom',
+      geometry: new THREE.TorusGeometry(0.34, 0.1, 10, 24),
+      material: new THREE.MeshStandardMaterial({
+        color: 0xb9ff8d,
+        emissive: 0x2f6e29,
+        emissiveIntensity: 1.7,
+        roughness: 0.38,
+      }),
+      physicsOptions: { enabled: false },
+    });
+    this.addVisualAndTrigger(visual, new THREE.Vector3(1.15, 0.9, 1.2));
+  }
+
+  public override tickPrePhysics(deltaTime: number): void {
+    super.tickPrePhysics(deltaTime);
+    this.elapsed += deltaTime;
+    if (!this.visual) return;
+    const pulse = 1 + Math.sin(this.elapsed * (this.consumed ? 3.5 : 5.5)) * 0.08;
+    this.visual.scale.setScalar((this.consumed ? 1.15 : 1) * pulse);
+    this.visual.rotation.z += deltaTime * (this.consumed ? 0.45 : 0.9);
+    const material = this.visual.material;
+    if (material instanceof THREE.MeshStandardMaterial) {
+      material.emissiveIntensity = (this.consumed ? 2.4 : 1.7) + (pulse - 1) * 2;
+    }
+  }
+
+  protected override onPlayerEntered(_player: SlimePawn): void {
+    this.consumed = true;
+    const respawnPosition = this.getWorldPosition().clone().add(new THREE.Vector3(0, 0.85, 0));
+    getSlimeGameContext(this.getWorld())?.activateVerticalCheckpoint(this.checkpointIndex, respawnPosition);
   }
 }
 

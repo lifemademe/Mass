@@ -4,12 +4,21 @@ import * as THREE from 'three';
 import { MassLedger, type MassRecord, type MassSnapshot } from './MassLedger.js';
 import { OvergrownAtmosphereBuilder } from './OvergrownAtmosphere.js';
 import { SlimeFeedbackSystem, type SlimeFeedbackEvent } from './SlimeFeedback.js';
+import {
+  createSlimeBackdrop,
+  createSlimeHaze,
+  createSlimeOccluder,
+  createSlimeSprite,
+} from './SlimeBackdrop.js';
+import { preloadMassVisualAssets, MASS_VISUAL_ASSETS } from './MassArtDirection.js';
 import { SlimePawn } from './SlimePawn.js';
 import { SlimePlayerController } from './SlimePlayerController.js';
 import { SlimePrototypeHud } from './SlimePrototypeHud.js';
 import { setSlimeGameContext, type PrototypePhase, type SlimeGameContext } from './SlimeRuntime.js';
 import { VerticalStageBuilder } from './VerticalStageBuilder.js';
 import { MassMainMenu } from '../ui/MassMainMenu.js';
+import { MassIntroSequence } from '../ui/MassIntroSequence.js';
+import { hideMassBootScreenWhenReady, showMassBootScreen } from '../ui/MassBootScreen.js';
 import {
   BiomassPickupNode,
   PrototypeBlockNode,
@@ -44,12 +53,17 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
   private pawn: SlimePawn | null = null;
   private hud: SlimePrototypeHud | null = null;
   private mainMenu: MassMainMenu | null = null;
+  private introSequence: MassIntroSequence | null = null;
   private phase: PrototypePhase = 'stretch';
   private gatesOpen = false;
   private sensedIndex = -1;
   private gameplayActive = false;
+  private presentationState: 'loading' | 'menu' | 'intro' | 'gameplay' = 'loading';
   private stage = 1;
   private stageTransitioning = false;
+  private verticalCheckpointIndex = 0;
+  private readonly verticalCheckpointPosition = new THREE.Vector3();
+  private readonly stageOneRecoveryPosition = new THREE.Vector3(-10.5, 0.75, 0);
 
   private readonly onMassChanged = (snapshot: MassSnapshot): void => {
     this.pawn?.applyMassSnapshot(snapshot);
@@ -94,11 +108,20 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
       onPlay: () => this.startGame(),
       onQuit: () => this.quitToEditor(),
     });
-    void Promise.all([this.hud.initialize(), this.mainMenu.initialize()]).then(() => {
+    this.introSequence = new MassIntroSequence(world.uiManager, { position: 'none', visible: false });
+    void Promise.all([
+      this.hud.initialize(),
+      this.mainMenu.initialize(),
+      this.introSequence.initialize(),
+      preloadMassVisualAssets(),
+    ]).then(async () => {
+      this.introSequence?.hide();
       this.hud?.updateMass(this.ledger.snapshot());
       this.hud?.updatePhase(this.phase);
       this.hud?.setGameplayVisible(false);
       this.mainMenu?.showMainMenu();
+      this.presentationState = 'menu';
+      await hideMassBootScreenWhenReady();
     });
     this.setPhase('stretch');
     return true;
@@ -111,13 +134,16 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     this.feedback.unbind();
     this.hud?.destroy();
     this.mainMenu?.destroy();
+    this.introSequence?.destroy();
     this.hud = null;
     this.mainMenu = null;
+    this.introSequence = null;
     this.anchors.clear();
     this.gates.clear();
     this.pieces.clear();
     this.pawn = null;
     this.gameplayActive = false;
+    this.presentationState = 'loading';
     return super.endPlay();
   }
 
@@ -125,9 +151,14 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
   public getMassSnapshot(): MassSnapshot { return this.ledger.snapshot(); }
   public getControlledRecord(): MassRecord | null { return this.ledger.getControlled(); }
   public isGameplayActive(): boolean { return this.gameplayActive; }
+  public isIntroActive(): boolean { return this.presentationState === 'intro'; }
+  public skipIntro(): void { this.introSequence?.skip(); }
 
   public registerPawn(pawn: SlimePawn): void {
     this.pawn = pawn;
+    this.stageOneRecoveryPosition.copy(pawn.getWorldPosition());
+    this.stageOneRecoveryPosition.y += 0.25;
+    this.stageOneRecoveryPosition.z = 0;
     this.ledger.reset(pawn.getMassSettings().initialOriginalMass, pawn);
   }
 
@@ -243,6 +274,27 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     this.hud?.showGrowthsAwakened();
   }
 
+  public activateVerticalCheckpoint(index: number, position: THREE.Vector3): void {
+    if (this.stage !== 2 || index <= this.verticalCheckpointIndex) return;
+    this.verticalCheckpointIndex = index;
+    this.verticalCheckpointPosition.copy(position).setZ(0);
+    this.playFeedback('checkpoint', position);
+    this.hud?.showCheckpoint(index);
+  }
+
+  public recoverFromVerticalFall(): void {
+    if (this.stageTransitioning || this.phase === 'complete') return;
+    const pawn = this.pawn;
+    if (!pawn) return;
+    const recoveryPosition = this.stage === 2
+      ? this.verticalCheckpointPosition
+      : this.stageOneRecoveryPosition;
+    pawn.teleportTo(recoveryPosition);
+    this.playFeedback('checkpoint', recoveryPosition);
+    pawn.addCameraImpulse(0.12);
+    this.hud?.showFallRecovered();
+  }
+
   public reportMomentumFailure(message: string): void {
     this.hud?.showMomentumFailure(message);
   }
@@ -278,6 +330,7 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     const gameLoop = world?.gameLoop;
     if (!world || !gameLoop) return;
     const activeScene = gameLoop.activeScenePath?.asStringPath;
+    showMassBootScreen();
     if (world.netWorld.isPlaying()) world.netWorld.endPlay();
     else if (world.isPlayEnded()) world.resetPlayStateForWorldTransition();
     if (activeScene) void gameLoop.openLevel(activeScene, { preserveRoots: false });
@@ -311,7 +364,106 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
       world.add(node);
       return node;
     };
+    for (const legacyNode of [
+      ...world.getNodes(ENGINE.SkyNode),
+      ...world.getNodes(ENGINE.FogNode),
+      ...world.getNodes(ENGINE.AmbientLightNode),
+      ...world.getNodes(ENGINE.DirectionalLightNode),
+    ]) {
+      legacyNode.destroy();
+    }
     for (const atmosphereNode of new OvergrownAtmosphereBuilder().build()) addRoot(atmosphereNode);
+    addRoot(createSlimeBackdrop({
+      name: 'Stage I Far Greenhouse',
+      texturePath: MASS_VISUAL_ASSETS.stage1Far,
+      position: new THREE.Vector3(-8, 3.5, 0.15),
+      size: new THREE.Vector2(50, 28.1),
+      parallaxRatio: 0.12,
+      axis: 'horizontal',
+      renderOrder: 40,
+    }));
+    addRoot(createSlimeHaze(
+      'Stage I Distant Haze',
+      new THREE.Vector3(-8, 3.8, 0.2),
+      new THREE.Vector2(56, 31.5),
+      'horizontal',
+    ));
+    addRoot(createSlimeBackdrop({
+      name: 'Stage I Midground Framing',
+      texturePath: MASS_VISUAL_ASSETS.stage1Mid,
+      position: new THREE.Vector3(-8, 3.5, 0.25),
+      size: new THREE.Vector2(60, 33.75),
+      parallaxRatio: 0.28,
+      axis: 'horizontal',
+      renderOrder: 50,
+    }));
+    addRoot(createSlimeBackdrop({
+      name: 'Stage I Foreground Props',
+      texturePath: MASS_VISUAL_ASSETS.stage1Foreground,
+      position: new THREE.Vector3(-8, 4, 2.8),
+      size: new THREE.Vector2(78, 43.9),
+      parallaxRatio: 0.55,
+      axis: 'horizontal',
+      renderOrder: 70,
+      maskBlack: true,
+    }));
+    addRoot(createSlimeOccluder(
+      'Stage I Foreground Occluder',
+      new THREE.Vector3(-8, 4, 3.2),
+      new THREE.Vector2(80, 45),
+      'horizontal',
+    ));
+    const platformFacade = (
+      name: string,
+      x: number,
+      collisionTop: number,
+      width: number,
+      artHeight: number,
+    ): void => {
+      addRoot(createSlimeSprite({
+        name,
+        texturePath: MASS_VISUAL_ASSETS.horizontalPlatform,
+        position: new THREE.Vector3(x, collisionTop - artHeight * 0.5 + 0.12, -1.62),
+        size: new THREE.Vector2(width + 0.35, artHeight),
+      }));
+    };
+    const wallFacade = (
+      name: string,
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+    ): void => {
+      addRoot(createSlimeSprite({
+        name,
+        texturePath: MASS_VISUAL_ASSETS.verticalWall,
+        position: new THREE.Vector3(x, y, -1.62),
+        size: new THREE.Vector2(width, height),
+      }));
+    };
+    platformFacade('Start Illustrated Platform', -6, 0, 10, 3.3);
+    platformFacade('Biomass Illustrated Platform', 5, 0, 6, 2.15);
+    platformFacade('Grate Illustrated Platform', 11, 0, 6, 2.15);
+    platformFacade('Hall Illustrated Platform', 20, 0, 12, 3.8);
+    platformFacade('Exit Illustrated Platform', 29, 6, 6, 2.15);
+    wallFacade('Start Illustrated Wall', -11.5, 4, 2.15, 9.4);
+    wallFacade('Grate Illustrated Wall', 14, 5.25, 2.45, 3.5);
+    const growthBush = (name: string, x: number, y: number): void => {
+      addRoot(createSlimeSprite({
+        name,
+        texturePath: MASS_VISUAL_ASSETS.growthBush,
+        position: new THREE.Vector3(x, y - 0.24, -1.62),
+        size: new THREE.Vector2(4.2, 2.1),
+        tint: 0xffffff,
+        renderOrder: 95,
+      }));
+    };
+    // Authored Stage I anchors already exist before the game mode begins, so
+    // their illustrated beds are placed with the rest of the fixed art pass.
+    // SlimeAnchorNode still owns the live green/red tint behaviour used by
+    // runtime-created and dormant growths in the vertical stage.
+    growthBush('Pit Growth Bush', 0.5, 4.5);
+    growthBush('Final High Growth Bush', 25, 8);
     if (world.getNodes(SlimeAnchorNode).length > 0) return;
 
     const block = (name: string, x: number, y: number, width: number, height: number, depth = 3): void => {
@@ -353,10 +505,20 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
 
   }
 
-  private startGame(): void {
-    if (this.gameplayActive) return;
-    this.gameplayActive = true;
+  private async startGame(): Promise<void> {
+    if (this.presentationState !== 'menu' || !this.introSequence) return;
+    this.presentationState = 'intro';
+    this.gameplayActive = false;
     this.mainMenu?.hide();
+    this.hud?.setGameplayVisible(false);
+    const introStartedAt = performance.now();
+    await this.introSequence.runSequence();
+    if (performance.now() - introStartedAt < 900 && this.presentationState === 'intro') {
+      await this.introSequence.runSequence();
+    }
+    if (this.presentationState !== 'intro') return;
+    this.presentationState = 'gameplay';
+    this.gameplayActive = true;
     this.hud?.setGameplayVisible(true);
     this.hud?.updateMass(this.ledger.snapshot());
     this.hud?.updatePhase(this.phase);
@@ -382,6 +544,8 @@ export class SlimePrototypeGameMode extends ENGINE.GameMode implements SlimeGame
     }
     this.stage = 2;
     this.phase = 'vertical';
+    this.verticalCheckpointIndex = 0;
+    this.verticalCheckpointPosition.copy(stage.spawnPosition);
     pawn.prepareVerticalStage();
     pawn.teleportTo(stage.spawnPosition);
     this.hud?.updatePhase('vertical');

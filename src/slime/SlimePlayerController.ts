@@ -35,7 +35,14 @@ export class SlimePlayerController extends ENGINE.PlayerController implements EN
   }
 
   public override handleKeyDown(event: KeyboardEvent): boolean {
-    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
+    const context = getSlimeGameContext(this.getWorld());
+    if (!context?.isGameplayActive()) {
+      if (context?.isIntroActive() && ['Space', 'Enter', 'Escape'].includes(event.code)) {
+        if (!event.repeat) context.skipIntro();
+        return true;
+      }
+      return false;
+    }
     if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
       this.left = 1;
     } else if (event.code === 'KeyD' || event.code === 'ArrowRight') {
@@ -77,7 +84,8 @@ export class SlimePlayerController extends ENGINE.PlayerController implements EN
   }
 
   public override handleMouseDown(_button: ENGINE.MouseButton, event: MouseEvent): boolean {
-    if (!getSlimeGameContext(this.getWorld())?.isGameplayActive()) return false;
+    const context = getSlimeGameContext(this.getWorld());
+    if (!context?.isGameplayActive()) return false;
     if (event.button !== 0) return false;
     this.pawnRef?.beginStretch();
     return true;

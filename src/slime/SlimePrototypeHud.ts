@@ -17,11 +17,11 @@ const VIEWPORT_LAYER: Record<string, string> = {
 };
 
 const PANEL: Record<string, string> = {
-  'background-color': 'rgba(18, 31, 29, 0.9)',
-  border: '1px solid rgba(117, 255, 211, 0.22)',
-  'border-radius': '12px',
+  'background-color': 'rgba(5, 17, 15, 0.91)',
+  border: '1px solid rgba(173, 149, 79, 0.68)',
+  'border-radius': '10px 18px 10px 16px',
   padding: '10px 12px',
-  'box-shadow': '0 6px 18px rgba(0, 0, 0, 0.35)',
+  'box-shadow': '0 8px 26px rgba(0, 0, 0, 0.5), inset 0 0 22px rgba(113, 151, 62, 0.08)',
 };
 
 const PHASE_COPY: Record<PrototypePhase, { title: string; body: string }> = {
@@ -87,24 +87,29 @@ export class SlimePrototypeHud {
   private milestone: ENGINE.Achievement | null = null;
   private gameplayVisible = true;
   private currentPhase: PrototypePhase = 'stretch';
+  private themeElement: HTMLStyleElement | null = null;
 
   public constructor(private readonly world: ENGINE.World) {}
 
   public async initialize(): Promise<void> {
     const ui = this.world.uiManager;
     this.massBar = new ENGINE.ProgressBar(ui, {
-      position: 'none', label: 'Controlled mass', currentValue: 100, maxValue: 100, textDisplay: 'custom', width: 230,
+      position: 'none', label: 'MASS', currentValue: 100, maxValue: 100, textDisplay: 'custom', width: 260,
+      fillColor: '#a9d84f', customClasses: ['mass-hud-meter'],
     });
     this.chargeBar = new ENGINE.ProgressBar(ui, {
-      position: 'none', label: 'Mass to shed', currentValue: 0, maxValue: 100, textDisplay: 'custom', width: 230,
+      position: 'none', label: 'MASS TO SHED', currentValue: 0, maxValue: 100, textDisplay: 'custom', width: 230,
+      fillColor: '#c9a34d', customClasses: ['mass-hud-charge'],
     });
     this.objective = new ENGINE.Card(ui, {
       ...ENGINE.Card.presets.elevated, position: 'none', title: 'Reach', body: PHASE_COPY.stretch.body,
+      customClasses: ['mass-hud-objective'],
     });
     this.controls = new ENGINE.ControlsPanel(ui, {
       position: 'none',
       title: 'Now',
       controls: PHASE_CONTROLS.stretch,
+      customClasses: ['mass-hud-controls'],
     });
     this.banner = new ENGINE.CenterMessage(ui, {});
     this.milestone = new ENGINE.Achievement(ui, {});
@@ -112,6 +117,7 @@ export class SlimePrototypeHud {
       this.massBar.initialize(), this.chargeBar.initialize(), this.objective.initialize(),
       this.controls.initialize(), this.banner.initialize(), this.milestone.initialize(),
     ]);
+    this.installTheme();
     this.layout();
     this.chargeBar.hide();
   }
@@ -204,6 +210,24 @@ export class SlimePrototypeHud {
     });
   }
 
+  public showCheckpoint(index: number): void {
+    this.milestone?.show({
+      ...ENGINE.Achievement.presets.common,
+      title: `Root memory ${index} awakened`,
+      description: 'A fall will return your mass to this bloom.',
+      duration: 2400,
+    });
+  }
+
+  public showFallRecovered(): void {
+    this.milestone?.show({
+      ...ENGINE.Achievement.presets.common,
+      title: 'The roots remember',
+      description: 'Your mass reforms at the last awakened bloom.',
+      duration: 2200,
+    });
+  }
+
   public destroy(): void {
     this.massBar?.destroy();
     this.chargeBar?.destroy();
@@ -217,17 +241,53 @@ export class SlimePrototypeHud {
     this.controls = null;
     this.banner = null;
     this.milestone = null;
+    this.themeElement?.remove();
+    this.themeElement = null;
   }
 
   private layout(): void {
     this.massBar?.setPosition(VIEWPORT_LAYER);
-    this.massBar?.setPosition({ position: 'absolute', top: '48px', left: '16px', width: '230px', ...PANEL }, '.ui-progress-bar');
+    this.massBar?.setPosition({ position: 'absolute', top: '24px', left: '24px', width: '260px', ...PANEL }, '.ui-progress-bar');
     this.chargeBar?.setPosition(VIEWPORT_LAYER);
-    this.chargeBar?.setPosition({ position: 'absolute', top: '112px', left: '16px', width: '230px', ...PANEL }, '.ui-progress-bar');
+    this.chargeBar?.setPosition({ position: 'absolute', top: '116px', left: '86px', width: '220px', ...PANEL }, '.ui-progress-bar');
     this.objective?.setPosition(VIEWPORT_LAYER);
-    this.objective?.setPosition({ position: 'absolute', left: '16px', bottom: '18px', width: '300px', ...PANEL }, '.ui-card');
+    this.objective?.setPosition({ position: 'absolute', left: '24px', bottom: '22px', width: '320px', ...PANEL }, '.ui-card');
     this.controls?.setPosition(VIEWPORT_LAYER);
-    this.controls?.setCustomPosition({ top: '48px', right: '16px', left: 'auto', bottom: 'auto' });
+    this.controls?.setCustomPosition({ top: '24px', right: '24px', left: 'auto', bottom: 'auto' });
+  }
+
+  private installTheme(): void {
+    this.themeElement?.remove();
+    const themeElement = document.createElement('style');
+    this.themeElement = themeElement;
+    themeElement.dataset.massHudTheme = 'true';
+    themeElement.textContent = `
+      .mass-hud-meter .ui-progress-bar,.mass-hud-meter.ui-progress-bar,
+      .mass-hud-charge .ui-progress-bar,.mass-hud-charge.ui-progress-bar,
+      .mass-hud-objective .ui-card,.mass-hud-objective.ui-card,
+      .mass-hud-controls .ui-controls-panel,.mass-hud-controls.ui-controls-panel{
+        color:#e9e3c9!important;background:linear-gradient(145deg,rgba(8,25,21,.95),rgba(3,11,10,.92))!important;
+        border:1px solid rgba(165,137,69,.72)!important;box-shadow:0 10px 28px rgba(0,0,0,.5),inset 0 0 25px rgba(128,167,67,.07)!important;
+        font-family:Georgia,'Times New Roman',serif!important;
+      }
+      .mass-hud-meter .ui-progress-bar,.mass-hud-meter.ui-progress-bar{padding-left:74px!important;min-height:62px!important;overflow:visible!important}
+      .mass-hud-meter .ui-progress-bar::before,.mass-hud-meter.ui-progress-bar::before{
+        content:'';position:absolute;left:-12px;top:-12px;width:72px;height:72px;border-radius:50% 46% 52% 48%;
+        background:radial-gradient(circle at 35% 28%,#efffb3 0 5%,transparent 6%),radial-gradient(circle at 42% 38%,#182116 0 7%,transparent 8%),radial-gradient(circle at 65% 40%,#182116 0 7%,transparent 8%),radial-gradient(ellipse at 50% 70%,#07110b 0 7%,transparent 8%),radial-gradient(circle at 42% 35%,#b9e45b,#698634 65%,#263817 100%);
+        border:4px solid #171b16;outline:1px solid rgba(177,146,73,.9);box-shadow:0 0 18px rgba(169,220,75,.35),inset 0 0 13px rgba(235,255,178,.32);
+      }
+      .mass-hud-meter .ui-progress-bar-track,.mass-hud-charge .ui-progress-bar-track{background:#152019!important;border:1px solid rgba(190,162,81,.38)!important;box-shadow:inset 0 2px 7px #000!important}
+      .mass-hud-meter .ui-progress-bar-fill{background:linear-gradient(90deg,#54742d,#b5df57,#d8ed7f)!important;box-shadow:0 0 10px rgba(178,226,81,.46)!important}
+      .mass-hud-charge .ui-progress-bar-fill{background:linear-gradient(90deg,#6f4c24,#d1a347)!important}
+      .mass-hud-objective .ui-card-title,.mass-hud-controls .ui-controls-panel-title{color:#d9d09f!important;letter-spacing:.04em;text-transform:none!important}
+      .mass-hud-objective .ui-card-body,.mass-hud-controls .ui-controls-panel-description{color:#b9c1ae!important;font-family:system-ui,sans-serif!important}
+      .mass-hud-objective .ui-card::before,.mass-hud-objective.ui-card::before,.mass-hud-controls .ui-controls-panel::before,.mass-hud-controls.ui-controls-panel::before{
+        content:'';position:absolute;inset:5px;pointer-events:none;border:1px solid rgba(91,126,64,.22);border-radius:7px 14px 8px 13px;
+      }
+      .mass-hud-controls .ui-controls-panel{max-width:min(360px,38vw)!important}
+      @media(max-width:760px){.mass-hud-controls .ui-controls-panel{transform:scale(.86);transform-origin:top right}.mass-hud-objective .ui-card{max-width:270px!important}.mass-hud-meter .ui-progress-bar{transform:scale(.88);transform-origin:top left}}
+    `;
+    this.world.gameContainer?.appendChild(themeElement);
   }
 
   private hideGameplayComponents(): void {

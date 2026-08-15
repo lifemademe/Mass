@@ -27,6 +27,8 @@ export interface SlimeGameContext {
   getMassSnapshot(): MassSnapshot;
   getControlledRecord(): MassRecord | null;
   isGameplayActive(): boolean;
+  isIntroActive(): boolean;
+  skipIntro(): void;
   registerPawn(pawn: SlimePawn): void;
   registerAnchor(anchor: SlimeAnchorNode): void;
   unregisterAnchor(anchor: SlimeAnchorNode): void;
@@ -42,6 +44,8 @@ export interface SlimeGameContext {
   reunitePiece(piece: SlimePieceNode): void;
   activateGateSwitch(position: THREE.Vector3): void;
   activateMomentumSwitch(position: THREE.Vector3): void;
+  activateVerticalCheckpoint(index: number, position: THREE.Vector3): void;
+  recoverFromVerticalFall(): void;
   reportMomentumFailure(message: string): void;
   canPiecesFollow(): boolean;
   tryComplete(requiredMass: number, position: THREE.Vector3, completesGame: boolean): boolean;

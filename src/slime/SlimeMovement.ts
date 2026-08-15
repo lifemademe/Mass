@@ -7,6 +7,7 @@ export interface SlimeMovementHost {
   getTetherLength(): number;
   getMovementSettings(): SlimeMovementSettingsNode;
   getMovementTimeScale(): number;
+  isReleaseSteeringLocked(): boolean;
 }
 
 @ENGINE.GameClass()
@@ -81,7 +82,7 @@ export class SlimeMovementSettingsNode extends ENGINE.SceneNode {
   public swingAcceleration = 12;
 
   @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 80, step: 1 })
-  public rotationAssistAcceleration = 10;
+  public rotationAssistAcceleration = 15;
 
   @ENGINE.property({ type: 'number', category: 'Stretch', min: 0, max: 0.9, step: 0.05 })
   public rotationAssistHeightRatio = 0.7;
@@ -148,7 +149,7 @@ export class SlimeMovementMode implements ENGINE.IMovementMode {
     let vy = ENGINE.getVerticalVelocity(sync);
     const anchor = host.getTetherAnchorPosition();
     const targetX = proposedMove.velocity.x * host.getMoveSpeed();
-    if (!anchor) {
+    if (!anchor && !host.isReleaseSteeringLocked()) {
       const hasHorizontalInput = Math.abs(inputX) > 0.01;
       if (wasGrounded) {
         vx = moveToward(vx, targetX, settings.acceleration * dt);
