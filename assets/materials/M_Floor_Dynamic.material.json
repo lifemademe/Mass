@@ -1,0 +1,15 @@
+{
+  "$root": {
+    "$bc": "GAME.DynamicUVNodeMaterialAsset",
+    "color": {
+      "$bc": "c",
+      "_": [
+        0.730461,
+        0.730461,
+        0.730461
+      ]
+    },
+    "scale": 0.25
+  },
+  "$version": 2
+}

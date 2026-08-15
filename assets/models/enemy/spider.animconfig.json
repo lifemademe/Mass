@@ -1,0 +1,118 @@
+{
+  "$root": {
+    "$bc": "ENGINE.AnimationConfigResource",
+    "clipOptions": {
+      "Death01": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "Gethit01": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "Idle01": {
+        "loop": "LoopRepeat"
+      },
+      "Walk01": {
+        "loop": "LoopRepeat"
+      }
+    },
+    "graphEditorLayout": {
+      "graphs": {
+        "base": {
+          "anyStatePosition": {
+            "x": 400,
+            "y": 50
+          },
+          "edges": {
+            "hit->idle": {},
+            "hit->walk": {},
+            "idle->walk": {},
+            "walk->idle": {}
+          },
+          "positions": {
+            "die": {
+              "x": 250,
+              "y": -73
+            },
+            "hit": {
+              "x": 91,
+              "y": -216
+            },
+            "idle": {
+              "x": 130,
+              "y": 203
+            },
+            "walk": {
+              "x": -204,
+              "y": 183
+            }
+          },
+          "selectedModel": "@engine/assets/models/demo/SandboxAsset/Characters/SKM_Arachnids_Large_Spider.glb",
+          "version": 1
+        }
+      },
+      "selectedModel": "@engine/assets/models/demo/SandboxAsset/Characters/SKM_Arachnids_Large_Spider.glb",
+      "version": 1
+    },
+    "initialState": "walk",
+    "parameters": {
+      "moving": true
+    },
+    "states": {
+      "die": {
+        "clip": "Death01",
+        "clipOptions": {},
+        "transitions": []
+      },
+      "hit": {
+        "clip": "Gethit01",
+        "clipOptions": {},
+        "transitions": [
+          {
+            "blendDuration": 0.12,
+            "condition": {
+              "clipFinished": true,
+              "moving": true
+            },
+            "to": "walk"
+          },
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "idle": {
+        "clip": "Idle01",
+        "clipOptions": {},
+        "transitions": [
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "moving": true
+            },
+            "to": "walk"
+          }
+        ]
+      },
+      "walk": {
+        "clip": "Walk01",
+        "clipOptions": {},
+        "transitions": [
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "moving": false
+            },
+            "to": "idle"
+          }
+        ]
+      }
+    }
+  },
+  "$version": 2
+}

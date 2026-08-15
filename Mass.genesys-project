@@ -1,0 +1,34 @@
+{
+  "defaultScene": "./assets/default.genesys-scene",
+  "engineVersion": "14.0.10-staging",
+  "assetCompiler": {
+    "enabled": false,
+    "compileOnPlay": false,
+    "textureCompression": {
+      "enabled": true,
+      "quality": "medium",
+      "maxSize": 2048,
+      "formats": {
+        "png": true,
+        "jpeg": true,
+        "webp": false
+      }
+    },
+    "meshCompression": {
+      "enabled": true,
+      "level": "medium"
+    },
+    "audioCompression": {
+      "enabled": true,
+      "quality": "medium",
+      "formats": {
+        "wav": true,
+        "flac": true,
+        "aiff": true,
+        "ogg": true,
+        "aac": true,
+        "m4a": true
+      }
+    }
+  }
+}

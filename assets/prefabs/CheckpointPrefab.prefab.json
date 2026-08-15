@@ -1,0 +1,100 @@
+{
+  "$root": {
+    "$bc": "GAME.CheckpointActor",
+    "editorData": {},
+    "name": "CheckpointPrefab",
+    "rootComponent": {
+      "$bc": "ENGINE.SceneComponent",
+      "children": [
+        {
+          "$bc": "ENGINE.TriggerZoneComponent",
+          "children": [],
+          "filter": "playerOnly",
+          "geometry": {
+            "$bc": "THREE.SphereGeometry",
+            "_": [
+              1,
+              12,
+              8
+            ]
+          },
+          "material": {
+            "$bc": "THREE.MeshBasicMaterial",
+            "color": {
+              "$bc": "c",
+              "_": [
+                0,
+                1,
+                0
+              ]
+            },
+            "opacity": 0.5,
+            "transparent": true,
+            "wireframe": true
+          },
+          "name": "ProximityTrigger",
+          "physicsOptions": {
+            "collisionProfile": "Trigger"
+          },
+          "position": {
+            "$bc": "v3",
+            "_": [
+              0,
+              1.2,
+              0
+            ]
+          },
+          "prefabNodeId": "d44df5772e0c72ce",
+          "scale": {
+            "$bc": "v3",
+            "_": [
+              1.6,
+              1.6,
+              1.6
+            ]
+          }
+        },
+        {
+          "$bc": "ENGINE.MeshComponent",
+          "castShadow": true,
+          "children": [],
+          "geometry": {
+            "$bc": "THREE.BoxGeometry",
+            "_": [
+              0.25,
+              2.4,
+              0.25
+            ]
+          },
+          "material": {
+            "$bc": "THREE.MeshStandardMaterial",
+            "color": {
+              "$bc": "c",
+              "_": [
+                0.246201,
+                0.318547,
+                0.401978
+              ]
+            }
+          },
+          "name": "CheckpointMarker",
+          "physicsOptions": {
+            "enabled": false
+          },
+          "position": {
+            "$bc": "v3",
+            "_": [
+              0,
+              1.2,
+              0
+            ]
+          },
+          "prefabNodeId": "9798f422922d241d"
+        }
+      ],
+      "name": "SceneComponent",
+      "prefabNodeId": "e1915b8914ac2eda"
+    }
+  },
+  "$version": 2
+}

@@ -1,0 +1,97 @@
+{
+  "version": 2,
+  "selectedModel": "@engine/assets/character/mannequinG.glb",
+  "graphs": {
+    "base": {
+      "version": 1,
+      "positions": {
+        "StrafeLeft": {
+          "x": -30.167082906491594,
+          "y": -384.75213536728035
+        },
+        "Yawn": {
+          "x": -233.12299159154037,
+          "y": -407.73959927301274
+        },
+        "airLoop": {
+          "x": 440,
+          "y": -60
+        },
+        "damage": {
+          "x": -140,
+          "y": 220
+        },
+        "die": {
+          "x": -420,
+          "y": 220
+        },
+        "doubleJump": {
+          "x": 160,
+          "y": -60
+        },
+        "idle": {
+          "x": -420,
+          "y": 0
+        },
+        "idleBreak": {
+          "x": -420,
+          "y": -200
+        },
+        "jumpStart": {
+          "x": 160,
+          "y": -220
+        },
+        "landHeavy": {
+          "x": 720,
+          "y": 40
+        },
+        "landLight": {
+          "x": 720,
+          "y": -160
+        },
+        "locomotion": {
+          "x": -140,
+          "y": 0
+        },
+        "tripleJump": {
+          "x": 160,
+          "y": 100
+        },
+        "mixamo.com": {
+          "x": -117.80649706341791,
+          "y": -239.2218288660715
+        }
+      },
+      "anyStatePosition": {
+        "x": 440,
+        "y": 260
+      },
+      "edges": {
+        "damage->locomotion": {},
+        "damage->idle": {},
+        "doubleJump->airLoop": {},
+        "idle->locomotion": {},
+        "idle->idleBreak": {},
+        "idleBreak->locomotion": {},
+        "idleBreak->idle": {},
+        "jumpStart->airLoop": {},
+        "landHeavy->locomotion": {},
+        "landHeavy->idle": {},
+        "landLight->locomotion": {},
+        "landLight->idle": {},
+        "locomotion->idle": {},
+        "tripleJump->airLoop": {}
+      },
+      "selectedModel": "@engine/assets/character/mannequinG.glb"
+    },
+    "layer": {
+      "version": 1,
+      "positions": {},
+      "anyStatePosition": {
+        "x": 0,
+        "y": 0
+      },
+      "selectedModel": "@engine/assets/character/mannequinG.glb"
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "$root": {
+    "$bc": "GAME.ExitActor",
+    "name": "Exit_1",
+    "rootComponent": {
+      "$bc": "ENGINE.SceneComponent",
+      "children": [
+        {
+          "$bc": "ENGINE.TriggerZoneComponent",
+          "children": [
+            {
+              "$bc": "THREE.Mesh",
+              "name": "ProximityTrigger",
+              "userData": {
+                "isTransient": true
+              }
+            }
+          ],
+          "filter": "playerOnly",
+          "geometry": {
+            "$bc": "THREE.SphereGeometry",
+            "_": [
+              1,
+              12,
+              8
+            ]
+          },
+          "material": {
+            "$bc": "THREE.MeshBasicMaterial",
+            "color": {
+              "$bc": "c",
+              "_": [
+                0,
+                1,
+                0
+              ]
+            },
+            "opacity": 0.5,
+            "transparent": true,
+            "wireframe": true
+          },
+          "name": "ProximityTrigger",
+          "physicsOptions": {
+            "collisionProfile": "Trigger"
+          },
+          "position": {
+            "$bc": "v3",
+            "_": [
+              0,
+              1.5,
+              0
+            ]
+          },
+          "prefabNodeId": "163148cbe31cdf07",
+          "scale": {
+            "$bc": "v3",
+            "_": [
+              1.6,
+              1.6,
+              1.6
+            ]
+          }
+        },
+        {
+          "$bc": "ENGINE.MeshComponent",
+          "children": [
+            {
+              "$bc": "THREE.Mesh",
+              "name": "ExitDoor",
+              "userData": {
+                "isTransient": true
+              }
+            }
+          ],
+          "geometry": {
+            "$bc": "THREE.BoxGeometry",
+            "_": [
+              1.6,
+              3,
+              0.4
+            ]
+          },
+          "material": {
+            "$bc": "THREE.MeshStandardMaterial",
+            "color": {
+              "$bc": "c",
+              "_": [
+                0.090842,
+                0.033105,
+                0.090842
+              ]
+            }
+          },
+          "name": "ExitDoor",
+          "physicsOptions": {
+            "enabled": false
+          },
+          "position": {
+            "$bc": "v3",
+            "_": [
+              0,
+              1.5,
+              0
+            ]
+          },
+          "prefabNodeId": "99162b6d39b65c9c"
+        }
+      ],
+      "name": "SceneComponent",
+      "prefabNodeId": "daebf6155f95b1ee"
+    }
+  },
+  "$version": 2
+}

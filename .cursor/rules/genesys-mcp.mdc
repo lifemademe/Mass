@@ -1,0 +1,36 @@
+---
+description: Use Genesys MCP (Sandbox Studio) for live editor/scene changes; never probe MCP through shell
+alwaysApply: true
+---
+
+# Genesys MCP Router
+
+**Naming:** Genesys in skills, rules, and code means the same product as **Sandbox Studio** in the app UI. Prefer Genesys MCP in agent prose; the IDE server id is the Sandbox Studio environment channel.
+
+For scene-visible or editor-authored changes, use Genesys MCP before editing code or `*.genesys-scene` / `*.prefab.json` files. This includes scene-node hierarchy, materials, colours, meshes, lights, cameras, node properties, prefab overrides, active scene/prefab, and editor state.
+
+Before implementing, decide where the state belongs:
+
+- Scene/editor state: use MCP first.
+- Reusable runtime behaviour: use TypeScript/source code.
+- Both: add/register the capability in code, then use MCP to place or configure it.
+
+Do not patch a specific editor-authored object in `beginPlay`, constructors, or one-off runtime code just to persist a visual scene change.
+
+Before the first Genesys MCP tool call in a task, read `.agents/skills/genesys/genesys-mcp-orchestrator/SKILL.md` and follow it. Open `references/workflows.md` only for task-specific recipes.
+
+MCP availability rules:
+
+- Connected: Genesys MCP tools such as `query_editor`, `query_node`, `action_node`, `action_scene`, `action_build`, `batch_execute`, or `run_script` are directly available.
+- Probe-capable: `CallMcpTool` is available and Genesys MCP descriptors/server metadata exist.
+- Off: the user says MCP is disabled/not connected, or neither signal above is present.
+
+Descriptor/server presence means probe-capable, not ready. Before any **mutation**, run `query_editor(getState)` or the orchestrator skill's equivalent readiness probe. Pure read-only `query_node` / `run_script(readOnly)` does not require `getState` when MCP tools are already Connected. If the probe fails, report the blocking reason, continue with normal code/filesystem work where possible, and do not retry MCP in the same turn.
+
+Sandbox Studio must be running with Genesys MCP enabled, and a project must be open (`project_none` otherwise). Connect the matching environment channel in the IDE (server id from Configure / connection details — do not invent the id). Disk MCP config alone is not readiness. `unauthorized` means re-run Configure or copy current connection details from Sandbox Studio AI Settings → MCP.
+
+Never call the MCP HTTP endpoint, `curl`, `Invoke-WebRequest`, localhost URLs, or shell workarounds. Use only Genesys MCP tools directly or via `CallMcpTool` after checking schemas when required.
+
+When MCP is ready, query the editor for live scene state via `query_node`. Do not grep/read `*.genesys-scene` unless the user explicitly asks or MCP is genuinely unavailable. Attached `@scene/…` / `@scene/… [nodeUuid=…]` lines are live nodes — pass `nodeUuid` as `componentIds`; never discover them with filesystem tools.
+
+Prefer `query_node` / `action_node` for scene and prefab document trees.

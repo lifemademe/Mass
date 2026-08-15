@@ -1,0 +1,2683 @@
+{
+  "$objects": [
+    {
+      "$bc": "ENGINE.DirectionalLightNode",
+      "$id": 1,
+      "$value": {
+        "castShadow": true,
+        "children": [
+          {
+            "$ref": 2
+          }
+        ],
+        "isSunLight": true,
+        "light": {
+          "$ref": 2
+        },
+        "name": "DirectionalLightComponent",
+        "nodeId": 56098,
+        "shadowBias": -0.001,
+        "shadowCameraBottom": -200,
+        "shadowCameraLeft": -200,
+        "shadowCameraRight": 200,
+        "shadowCameraTop": 200,
+        "shadowFar": 150,
+        "userData": {
+          "objectFlags": 1
+        },
+        "uuid": "3249cb5131461049"
+      }
+    },
+    {
+      "$bc": "THREE.DirectionalLight",
+      "$id": 2,
+      "$value": {
+        "_": [
+          {
+            "$bc": "c",
+            "_": [
+              0.982251,
+              0.921582,
+              0.846873
+            ]
+          },
+          10
+        ]
+      }
+    },
+    {
+      "$bc": "ENGINE.MeshNode",
+      "$id": 3,
+      "$value": {
+        "children": {
+          "$length": 1
+        },
+        "geometry": {
+          "$bc": "THREE.BoxGeometry",
+          "_": [
+            500,
+            25,
+            12
+          ]
+        },
+        "material": "@project/assets/materials/M_Floor_Dynamic.material.json",
+        "name": "MeshComponent",
+        "nodeId": 4991,
+        "physicsOptions": {
+          "collisionMeshType": "boundingBox",
+          "contributeToParentCollider": true
+        },
+        "receiveShadow": true,
+        "userData": {
+          "objectFlags": 1
+        },
+        "uuid": "49cb5131461049bd"
+      }
+    },
+    {
+      "$bc": "ENGINE.SkyNode",
+      "$id": 4,
+      "$value": {
+        "children": {
+          "$length": 2
+        },
+        "cloudDensity": 0.7,
+        "cloudElevation": 0.42,
+        "cloudSpeed": 0.00005,
+        "generateEnvironmentMap": true,
+        "mieDirectionalG": 0.85,
+        "name": "SkyComponent",
+        "nodeId": 35937,
+        "userData": {
+          "objectFlags": 1
+        },
+        "uuid": "9cb5131461049bd3"
+      }
+    }
+  ],
+  "$root": {
+    "$bc": "ENGINE.World",
+    "children": [
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {
+          "rootComponent": {
+            "$ref": 1
+          }
+        },
+        "children": [
+          {
+            "$ref": 1
+          }
+        ],
+        "name": "Directional Light",
+        "nodeId": 24522,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            63.2,
+            75.5,
+            -10
+          ]
+        },
+        "rotation": {
+          "$bc": "e",
+          "_": [
+            1.733575,
+            -0.506201,
+            -0.232799
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "cb5131461049bd36"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {
+          "rootComponent": {
+            "$ref": 3
+          }
+        },
+        "children": [
+          {
+            "$ref": 3
+          }
+        ],
+        "name": "Ground",
+        "nodeId": 15441,
+        "physicsOptions": {
+          "collisionMeshType": "boundingBox"
+        },
+        "position": {
+          "$bc": "v3",
+          "_": [
+            0,
+            -13.5,
+            0
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "131461049bd365ad"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {
+          "rootComponent": {
+            "$ref": 4
+          }
+        },
+        "children": [
+          {
+            "$ref": 4
+          }
+        ],
+        "name": "Sky",
+        "nodeId": 45516,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            0,
+            6.1,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            10000,
+            10000,
+            10000
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "31461049bd365add"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 41973,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "d7403b6b-b402-454e-8e04-ff5e651c6176"
+          }
+        ],
+        "name": "Platform_O",
+        "nodeId": 37322,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            89,
+            1.7,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3.5,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "a3271a9b619c32cf"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 20568,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "b323f691-0b5a-42ac-8920-76f0743c373e"
+          }
+        ],
+        "name": "Platform_B",
+        "nodeId": 57031,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            9,
+            1,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "98171a361450ee5e"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 39710,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "4cfff29d-750a-4066-9eac-c0679daa5158"
+          }
+        ],
+        "name": "Platform_C",
+        "nodeId": 32719,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            18.7,
+            0.4,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3.5,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "15a473fa85f6af86"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/HealthPickupPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "2b4355fe-e21b-4063-94fb-8a1707fc5da1",
+                  "wireframe": true
+                },
+                "nodeId": 25199,
+                "prefabId": "df7f3fb7729fb897",
+                "selfHidden": false,
+                "uuid": "e711786d-31c6-4a50-b9a1-e9cdfe0a7108"
+              },
+              "1": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 3736,
+                "prefabId": "f51ee85a4be26d67",
+                "uuid": "7a063f56-892b-4a45-95de-8b47c45666bd"
+              },
+              "$length": 2
+            },
+            "nodeId": 21857,
+            "prefabId": "356142f33fa0bd46",
+            "uuid": "65ae708f-dc8a-45ec-8899-4892837ec253"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "nodeId": 34564,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            26,
+            3.3,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/HealthPickupPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "8d5528e456bd6cfa"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/CheckpointPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "f575b2f7-2499-4273-afcf-cd776b16a14e",
+                  "wireframe": true
+                },
+                "nodeId": 10400,
+                "prefabId": "d44df5772e0c72ce",
+                "selfHidden": false,
+                "uuid": "256d173d-0f00-4b79-9497-84caf36da258"
+              },
+              "1": {
+                "$bc": "ENGINE.MeshNode",
+                "children": {
+                  "$length": 1
+                },
+                "nodeId": 37038,
+                "prefabId": "9798f422922d241d",
+                "uuid": "34658d85-fbb6-49c0-9527-b59fe945e861"
+              },
+              "$length": 2
+            },
+            "nodeId": 59473,
+            "prefabId": "e1915b8914ac2eda",
+            "uuid": "a5079a58-4851-437f-99da-c8530838867e"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "nodeId": 21893,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            34,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/CheckpointPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "a9058a66ecd32965"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/ExitPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "485e766f-05a0-406a-8123-80bff31c0152",
+                  "wireframe": true
+                },
+                "nodeId": 28619,
+                "prefabId": "163148cbe31cdf07",
+                "selfHidden": false,
+                "uuid": "9c53fffd-8adb-41cc-949f-ce9ea955cd10"
+              },
+              "1": {
+                "$bc": "ENGINE.MeshNode",
+                "children": {
+                  "$length": 1
+                },
+                "nodeId": 55445,
+                "prefabId": "99162b6d39b65c9c",
+                "uuid": "7ecba179-42d7-4443-9c81-298ac773ffe4"
+              },
+              "$length": 2
+            },
+            "nodeId": 6121,
+            "prefabId": "daebf6155f95b1ee",
+            "uuid": "4615449e-b1ef-407f-a906-77400d989969"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "nodeId": 63425,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            94,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/ExitPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "87b9853ff5851eb8"
+      },
+      {
+        "$bc": "ENGINE.PlayerStart",
+        "$initOptions": {},
+        "children": {
+          "$length": 1
+        },
+        "name": "Player Start 2",
+        "nodeId": 18314,
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "1b4b1df5b2766948"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/EnemyPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 13954,
+                "prefabId": "c517af3e5377f0b7",
+                "uuid": "133f2277-4cf3-421f-96b7-1d5ee7396adc"
+              },
+              "1": {
+                "$bc": "ENGINE.AnimationStateMachineNode",
+                "nodeId": 29650,
+                "prefabId": "1601215cffbb9686",
+                "uuid": "f5b6f6f9-ade8-4429-9997-61aa47d5f0dd"
+              },
+              "2": {
+                "$bc": "GAME.ContactDamageComponent",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    0.8,
+                    32,
+                    16
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "fa3e50dc-073a-4caf-80fb-8454868ae4b0",
+                  "wireframe": true
+                },
+                "nodeId": 19595,
+                "prefabId": "c22e62244cd8c296",
+                "selfHidden": false,
+                "uuid": "bab9f3c7-623f-4b41-a4ef-f71c935e430c"
+              },
+              "3": {
+                "$bc": "ENGINE.CharacterStatsNode",
+                "nodeId": 13538,
+                "prefabId": "b599516564cdee1a",
+                "uuid": "aed387fe-3ad9-4172-9738-f25be57a24c7"
+              },
+              "4": {
+                "$bc": "GAME.PatrolComponent",
+                "nodeId": 18977,
+                "prefabId": "f45e669c68987f45",
+                "uuid": "ab5e4bbf-6925-4a87-9832-c5511987539f"
+              },
+              "5": {
+                "$bc": "ENGINE.SoundNode",
+                "nodeId": 48128,
+                "prefabId": "3be3b26a85903604",
+                "uuid": "7eff0942-4511-4c15-abc1-47947e063203"
+              },
+              "$length": 6
+            },
+            "nodeId": 7284,
+            "prefabId": "995ec64c10e774ed",
+            "uuid": "c0099cfa-32fb-4386-9b72-3bacf04a81cd"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "Enemy_1",
+        "nodeId": 24466,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            14,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/EnemyPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "a95498fc9846ba57"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/EnemyPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 45959,
+                "prefabId": "c517af3e5377f0b7",
+                "uuid": "1a375157-01ad-437c-a5a1-8eb2c7f9adb6"
+              },
+              "1": {
+                "$bc": "ENGINE.AnimationStateMachineNode",
+                "nodeId": 20645,
+                "prefabId": "1601215cffbb9686",
+                "uuid": "038f1c17-12d3-4764-a541-14d3b1d6771d"
+              },
+              "2": {
+                "$bc": "GAME.ContactDamageComponent",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    0.8,
+                    32,
+                    16
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "f4f4d2ff-12a7-429c-be2a-3b5a45c37f48",
+                  "wireframe": true
+                },
+                "nodeId": 14712,
+                "prefabId": "c22e62244cd8c296",
+                "selfHidden": false,
+                "uuid": "7a4737c1-edd7-4560-85d5-4fe1ef870e88"
+              },
+              "3": {
+                "$bc": "ENGINE.CharacterStatsNode",
+                "nodeId": 14649,
+                "prefabId": "b599516564cdee1a",
+                "uuid": "c2ed615d-5c26-4770-bed3-77304141f2f1"
+              },
+              "4": {
+                "$bc": "GAME.PatrolComponent",
+                "nodeId": 24873,
+                "prefabId": "f45e669c68987f45",
+                "uuid": "55b247e2-aa0e-4591-81f6-9f68a27e5244"
+              },
+              "5": {
+                "$bc": "ENGINE.SoundNode",
+                "nodeId": 19389,
+                "prefabId": "3be3b26a85903604",
+                "uuid": "32608b1a-429a-4b07-ac3e-a50450362dda"
+              },
+              "$length": 6
+            },
+            "nodeId": 27704,
+            "prefabId": "995ec64c10e774ed",
+            "uuid": "483162aa-4c6a-4a66-ad6e-456391865f23"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "Enemy_2",
+        "nodeId": 50806,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            47,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/EnemyPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "6a205cf4e5016b94"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 33438,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "3a9eaf3594e4729b"
+          }
+        ],
+        "name": "Platform_A 02",
+        "nodeId": 7831,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            4,
+            0.3,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            5,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "903481e3e98a1a31"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 25916,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "31e04948fa84d3a4"
+          }
+        ],
+        "name": "Platform_D 02",
+        "nodeId": 28402,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            22,
+            1.4,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "402255898e2daac6"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 39635,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "e1c8dc038b4841aa"
+          }
+        ],
+        "name": "Platform_E 02",
+        "nodeId": 9307,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            26,
+            2.4,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "d28b03671e079e31"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 36969,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "6e2412cdee530787"
+          }
+        ],
+        "name": "Platform_F 02",
+        "nodeId": 31869,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            30,
+            1.5,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "1a2cee43c947ddee"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 6052,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "9303a0260211aa9e"
+          }
+        ],
+        "name": "Platform_G 02",
+        "nodeId": 40700,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            40,
+            0.7,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.5,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "2e031d877a6b5328"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 60305,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "bb213dfd90236f98"
+          }
+        ],
+        "name": "Platform_H 02",
+        "nodeId": 39836,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            45,
+            1.6,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.5,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "03a387394ce394a6"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 31894,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "3dadad4144720a8f"
+          }
+        ],
+        "name": "Platform_I 02",
+        "nodeId": 3702,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            50,
+            0.9,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.5,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "cb3705d3ac373272"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 44452,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "0c49503ab1ec3a34"
+          }
+        ],
+        "name": "Platform_J 02",
+        "nodeId": 58771,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            56,
+            0.35,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            4,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "cd215139826fc974"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 36178,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "ffbcb84475c71ddf"
+          }
+        ],
+        "name": "Platform_K 02",
+        "nodeId": 25504,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            61,
+            0.6,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.2,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "a8e4cf6a5ce417f2"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 10462,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "953bf1b368499835"
+          }
+        ],
+        "name": "Platform_L 02",
+        "nodeId": 34559,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            74,
+            0.5,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "614fdcfe0a481b94"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 57138,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "20a42521f5d41087"
+          }
+        ],
+        "name": "Platform_M 02",
+        "nodeId": 12119,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            79,
+            1.5,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.8,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "161f42e1e5c054c2"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "material": "@project/assets/materials/M_Wall_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 22327,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "62046a9969cff50f"
+          }
+        ],
+        "name": "Platform_N 02",
+        "nodeId": 39194,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            84,
+            2.5,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.8,
+            0.5,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "63380dd4a6ba6c9b"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/EnemyPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 20241,
+                "prefabId": "c517af3e5377f0b7",
+                "uuid": "3bb0e555-bdd1-4edf-9523-5c6bd99ab0ac"
+              },
+              "1": {
+                "$bc": "ENGINE.AnimationStateMachineNode",
+                "nodeId": 14660,
+                "prefabId": "1601215cffbb9686",
+                "uuid": "3602472c-4e42-43e8-aa61-c498e40d96c7"
+              },
+              "2": {
+                "$bc": "GAME.ContactDamageComponent",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    0.8,
+                    32,
+                    16
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "24fbf9c7-66f8-4972-8fa2-c441ae2ad81a",
+                  "wireframe": true
+                },
+                "nodeId": 26645,
+                "prefabId": "c22e62244cd8c296",
+                "selfHidden": false,
+                "uuid": "7bf32875-4ed3-4dd8-a97f-58257f26f2f5"
+              },
+              "3": {
+                "$bc": "ENGINE.CharacterStatsNode",
+                "nodeId": 58643,
+                "prefabId": "b599516564cdee1a",
+                "uuid": "d467f481-f6fe-4b98-9d5e-a0fb171071ef"
+              },
+              "4": {
+                "$bc": "GAME.PatrolComponent",
+                "nodeId": 41975,
+                "prefabId": "f45e669c68987f45",
+                "uuid": "de0993e3-a441-43de-8730-daca426a7d3e"
+              },
+              "5": {
+                "$bc": "ENGINE.SoundNode",
+                "nodeId": 58820,
+                "prefabId": "3be3b26a85903604",
+                "uuid": "16deb2af-4146-470f-a526-9554471ed865"
+              },
+              "$length": 6
+            },
+            "nodeId": 16211,
+            "prefabId": "995ec64c10e774ed",
+            "uuid": "474c41bc-c26d-4f7d-95b3-2965e05419c6"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "Enemy_3",
+        "nodeId": 10927,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            58,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/EnemyPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "0df4668824a746f1"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/EnemyPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 41261,
+                "prefabId": "c517af3e5377f0b7",
+                "uuid": "13829030-8d1f-4761-9115-30231c157c6c"
+              },
+              "1": {
+                "$bc": "ENGINE.AnimationStateMachineNode",
+                "nodeId": 17809,
+                "prefabId": "1601215cffbb9686",
+                "uuid": "bf8797df-47cc-4ee4-ba03-5ee646cbfc2b"
+              },
+              "2": {
+                "$bc": "GAME.ContactDamageComponent",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    0.8,
+                    32,
+                    16
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "a246c525-3d97-472c-9225-f8577abd37cc",
+                  "wireframe": true
+                },
+                "nodeId": 26663,
+                "prefabId": "c22e62244cd8c296",
+                "selfHidden": false,
+                "uuid": "d392de1a-a465-4446-9905-dc45c1a27db1"
+              },
+              "3": {
+                "$bc": "ENGINE.CharacterStatsNode",
+                "nodeId": 42533,
+                "prefabId": "b599516564cdee1a",
+                "uuid": "2ab2fe22-ce34-492f-ac6a-db1753f1b850"
+              },
+              "4": {
+                "$bc": "GAME.PatrolComponent",
+                "nodeId": 369,
+                "prefabId": "f45e669c68987f45",
+                "uuid": "077cd4c2-79d1-4e43-9ab8-46856bc1f675"
+              },
+              "5": {
+                "$bc": "ENGINE.SoundNode",
+                "nodeId": 29188,
+                "prefabId": "3be3b26a85903604",
+                "uuid": "b81f4db3-47bf-4410-a920-93a17a180b2c"
+              },
+              "$length": 6
+            },
+            "nodeId": 52392,
+            "prefabId": "995ec64c10e774ed",
+            "uuid": "ef0cab76-1ae9-4635-8f2a-8d36bf6d096f"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "Enemy_4",
+        "nodeId": 58899,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            66,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/EnemyPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "a539ed81229e3689"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/EnemyPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 19438,
+                "prefabId": "c517af3e5377f0b7",
+                "uuid": "7633bf2c-7b5f-49d1-bc36-056bb2b5ab57"
+              },
+              "1": {
+                "$bc": "ENGINE.AnimationStateMachineNode",
+                "nodeId": 1094,
+                "prefabId": "1601215cffbb9686",
+                "uuid": "742be68e-74d2-4f60-bfda-84968135eff0"
+              },
+              "2": {
+                "$bc": "GAME.ContactDamageComponent",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    0.8,
+                    32,
+                    16
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "42d0f1ad-37d5-47da-b283-040e29678297",
+                  "wireframe": true
+                },
+                "nodeId": 18451,
+                "prefabId": "c22e62244cd8c296",
+                "selfHidden": false,
+                "uuid": "c1b03aaa-95a4-46e3-9454-1c90dd172e81"
+              },
+              "3": {
+                "$bc": "ENGINE.CharacterStatsNode",
+                "nodeId": 36989,
+                "prefabId": "b599516564cdee1a",
+                "uuid": "5501d4d3-fb5a-41b7-9798-568a7b274e51"
+              },
+              "4": {
+                "$bc": "GAME.PatrolComponent",
+                "nodeId": 36294,
+                "prefabId": "f45e669c68987f45",
+                "uuid": "0d1ff11a-35c1-4707-9f49-6635b691580a"
+              },
+              "5": {
+                "$bc": "ENGINE.SoundNode",
+                "nodeId": 46451,
+                "prefabId": "3be3b26a85903604",
+                "uuid": "391721c4-ae7b-4bd5-a04c-1cf8eec8ecfa"
+              },
+              "$length": 6
+            },
+            "nodeId": 37920,
+            "prefabId": "995ec64c10e774ed",
+            "uuid": "24485424-8d85-4d2f-8250-a10d7a573119"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "Enemy_5",
+        "nodeId": 21716,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            86,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/EnemyPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "22b78ccab499449b"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/HealthPickupPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "70ec0b7d-b1af-47f5-b4ff-5339d06280dd",
+                  "wireframe": true
+                },
+                "nodeId": 15764,
+                "prefabId": "df7f3fb7729fb897",
+                "selfHidden": false,
+                "uuid": "884e65ce-dc85-4c40-84b3-ccabaad2b93c"
+              },
+              "1": {
+                "$bc": "ENGINE.ModelMeshNode",
+                "nodeId": 46622,
+                "prefabId": "f51ee85a4be26d67",
+                "uuid": "41572286-47c7-41c9-abcf-5a2630568880"
+              },
+              "$length": 2
+            },
+            "nodeId": 12405,
+            "prefabId": "356142f33fa0bd46",
+            "uuid": "da71abe5-9841-4d77-848c-cea327face17"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "HealthPickup_2",
+        "nodeId": 24160,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            61,
+            1.5,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/HealthPickupPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "86aa5270acbd335d"
+      },
+      {
+        "$base": {
+          "$path": "@project/assets/prefabs/CheckpointPrefab.prefab.json"
+        },
+        "children": {
+          "0": {
+            "$bc": "ENGINE.SceneNode",
+            "children": {
+              "0": {
+                "$bc": "ENGINE.TriggerZoneNode",
+                "children": {
+                  "$length": 1
+                },
+                "geometry": {
+                  "$bc": "THREE.SphereGeometry",
+                  "_": [
+                    1,
+                    12,
+                    8
+                  ]
+                },
+                "material": {
+                  "$bc": "THREE.MeshBasicMaterial",
+                  "color": {
+                    "$bc": "c",
+                    "_": [
+                      0,
+                      1,
+                      0
+                    ]
+                  },
+                  "opacity": 0.5,
+                  "transparent": true,
+                  "uuid": "5419b909-e1d7-4f65-965c-8c2db55145b6",
+                  "wireframe": true
+                },
+                "nodeId": 20305,
+                "prefabId": "d44df5772e0c72ce",
+                "selfHidden": false,
+                "uuid": "f38c69c2-d5b8-487d-b52d-5d3545c2db22"
+              },
+              "1": {
+                "$bc": "ENGINE.MeshNode",
+                "children": {
+                  "$length": 1
+                },
+                "nodeId": 28621,
+                "prefabId": "9798f422922d241d",
+                "uuid": "5785495d-11f2-4706-ab4c-044d5c90973f"
+              },
+              "$length": 2
+            },
+            "nodeId": 26387,
+            "prefabId": "e1915b8914ac2eda",
+            "uuid": "9d467965-44ac-4574-b7af-395e90404c44"
+          },
+          "$length": 1
+        },
+        "editableChildren": true,
+        "name": "Checkpoint_2",
+        "nodeId": 40766,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            70,
+            -0.85,
+            0
+          ]
+        },
+        "prefabPath": "@project/assets/prefabs/CheckpointPrefab.prefab.json",
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "8ab625ced4062c8b"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "geometry": {
+              "$bc": "THREE.BoxGeometry",
+              "_": [
+                2,
+                8,
+                2
+              ]
+            },
+            "material": "@project/assets/materials/M_Floor_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 21483,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "6e4375c4-22e3-4eaf-8161-3193a10f9366"
+          }
+        ],
+        "name": "Pillar_1",
+        "nodeId": 42533,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -17,
+            3,
+            -5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "fb32039b777af3ca"
+      },
+      {
+        "$bc": "GAME.Action2DSettingsActor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "GAME.CombatFeelSettingsComponent",
+            "name": "CombatFeelSettings",
+            "nodeId": 6461,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "32f0ebb6-69a8-49c5-b1c9-936828104ddd"
+          },
+          {
+            "$bc": "GAME.SoundFeedbackSettingsComponent",
+            "name": "SoundFeedbackSettings",
+            "nodeId": 9159,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "6cfb8f81-8381-4090-8284-4d3dcc9f6f6e"
+          }
+        ],
+        "name": "Action2DSettings",
+        "nodeId": 4768,
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "b3ea766a063cfc1b"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Mid_A.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Mid_A.glb",
+            "name": "Mesh",
+            "nodeId": 17654,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "e88e70dc-b7cb-4d06-b81e-19c8e5b749e5"
+          }
+        ],
+        "name": "Sm Mid A",
+        "nodeId": 8688,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            0,
+            -11.8,
+            -22.6
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2,
+            2,
+            2
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "07545b465d588ef6"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Mid_C.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Mid_C.glb",
+            "name": "Mesh",
+            "nodeId": 64442,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "09b61794-84b9-4bd0-81f5-67d7c59316da"
+          }
+        ],
+        "name": "Sm Mid C",
+        "nodeId": 60511,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            21.6,
+            -16.5,
+            -29.2
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            3,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "5a3b7573f7ee38f1"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Mid_B.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Mid_B.glb",
+            "name": "Mesh",
+            "nodeId": 2788,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "f1cd2fbd-d7cb-4f50-ac5a-67fc06d669b7"
+          }
+        ],
+        "name": "Sm Mid B",
+        "nodeId": 43074,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            49.6,
+            -6.9,
+            -23.8
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            3,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "13f79caa5871cddb"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Mid_A.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Mid_A.glb",
+            "name": "Mesh",
+            "nodeId": 14756,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "b54fc68d986c5e9d"
+          }
+        ],
+        "name": "Sm Mid A 02",
+        "nodeId": 46240,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            80.2,
+            -7.2,
+            -30.8
+          ]
+        },
+        "rotation": {
+          "$bc": "e",
+          "_": [
+            3.141592,
+            0,
+            3.141592
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.5,
+            2.5,
+            2.5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "f0acfc7754664c91"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Back_C.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Back_C.glb",
+            "name": "Mesh",
+            "nodeId": 65384,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "277baed5-eb2d-4df5-8223-a6b3fc8a0bb4"
+          }
+        ],
+        "name": "Sm Back C",
+        "nodeId": 62803,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -8.8,
+            -11.9,
+            -69.3
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            3,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "8c1d87bc1ce58ed2"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Back_B.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Back_B.glb",
+            "name": "Mesh",
+            "nodeId": 25523,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "79ec2c64-6701-4f5c-9c3a-bc33abdd2f8d"
+          }
+        ],
+        "name": "Sm Back B",
+        "nodeId": 47902,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            35.6,
+            -16.5,
+            -86.2
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            4,
+            4,
+            4
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "3b6c675f9b697b43"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Back_A.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Back_A.glb",
+            "name": "Mesh",
+            "nodeId": 5307,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "a2654a80-7ba2-48b9-a1a8-5d6a350132e7"
+          }
+        ],
+        "name": "Sm Back A",
+        "nodeId": 41200,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            78,
+            -16.4,
+            -77.8
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            4,
+            4,
+            4
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "f07746603f497a29"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "geometry": {
+              "$bc": "THREE.BoxGeometry",
+              "_": [
+                2,
+                8,
+                2
+              ]
+            },
+            "material": "@project/assets/materials/M_Floor_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 1276,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "23d6724debf570f1"
+          }
+        ],
+        "name": "Pillar_2",
+        "nodeId": 35589,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -17,
+            3,
+            5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "c9fd7345dbb02849"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "geometry": {
+              "$bc": "THREE.BoxGeometry",
+              "_": [
+                2,
+                8,
+                2
+              ]
+            },
+            "material": "@project/assets/materials/M_Floor_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 46233,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "eac0ec0081a9c9ce"
+          }
+        ],
+        "name": "Pillar 03",
+        "nodeId": 34097,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            104.9,
+            3,
+            -5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "183a6f2e5426a798"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.MeshNode",
+            "castShadow": true,
+            "children": {
+              "$length": 1
+            },
+            "geometry": {
+              "$bc": "THREE.BoxGeometry",
+              "_": [
+                2,
+                8,
+                2
+              ]
+            },
+            "material": "@project/assets/materials/M_Floor_Dynamic.material.json",
+            "name": "MeshComponent",
+            "nodeId": 38742,
+            "physicsOptions": {
+              "contributeToParentCollider": true
+            },
+            "receiveShadow": true,
+            "uuid": "6582cf8d28ba3691"
+          }
+        ],
+        "name": "Pillar 03",
+        "nodeId": 56398,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            104.9,
+            3,
+            5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "99601dce9c76e458"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Back_B.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Back_B.glb",
+            "name": "Mesh",
+            "nodeId": 32923,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "da1b85856e52950c"
+          }
+        ],
+        "name": "Sm Back B 02",
+        "nodeId": 28906,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -44.6,
+            -16.5,
+            -73
+          ]
+        },
+        "rotation": {
+          "$bc": "e",
+          "_": [
+            0,
+            -1.570796,
+            0
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            4,
+            4,
+            4
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "0f96031eedfb6e74"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Mid_A.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Mid_A.glb",
+            "name": "Mesh",
+            "nodeId": 39632,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "253b8a1556dca501"
+          }
+        ],
+        "name": "Sm Mid A 03",
+        "nodeId": 13108,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            -26.7,
+            -7.2,
+            -27.8
+          ]
+        },
+        "rotation": {
+          "$bc": "e",
+          "_": [
+            3.141592,
+            0,
+            3.141592
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            2.5,
+            2.5,
+            2.5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "7927d609ef40cbd5"
+      },
+      {
+        "$bc": "ENGINE.Actor",
+        "$initOptions": {},
+        "children": [
+          {
+            "$bc": "ENGINE.FogNode",
+            "fogColor": {
+              "$bc": "c",
+              "_": [
+                0.47932,
+                0.693872,
+                0.822786
+              ]
+            },
+            "fogDensity": 0.001,
+            "fogFar": 120,
+            "fogNear": 0,
+            "name": "Fog",
+            "nodeId": 50638,
+            "uuid": "d5c4f728aa83ccf3"
+          }
+        ],
+        "editorData": {
+          "hidden": true
+        },
+        "name": "Fog",
+        "nodeId": 19489,
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "05bd9c7aa5ef0c5f"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Back_C.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Back_C.glb",
+            "name": "Mesh",
+            "nodeId": 64845,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "021dbbde542646ee"
+          }
+        ],
+        "name": "Sm Back C 02",
+        "nodeId": 53113,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            110.2,
+            -11.9,
+            -84.7
+          ]
+        },
+        "rotation": {
+          "$bc": "e",
+          "_": [
+            3.141592,
+            0,
+            3.141592
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3.5,
+            3.5,
+            3.5
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "844672158510a484"
+      },
+      {
+        "$bc": "ENGINE.ModelMeshActor",
+        "$initOptions": {
+          "modelUrl": "@project/assets/models/background/SM_Mid_B.glb"
+        },
+        "children": [
+          {
+            "$bc": "ENGINE.ModelMeshNode",
+            "modelUrl": "@project/assets/models/background/SM_Mid_B.glb",
+            "name": "Mesh",
+            "nodeId": 15781,
+            "userData": {
+              "objectFlags": 1
+            },
+            "uuid": "9a962f4e90cd9f31"
+          }
+        ],
+        "name": "Sm Mid B 02",
+        "nodeId": 40931,
+        "position": {
+          "$bc": "v3",
+          "_": [
+            125.9,
+            -6.9,
+            -36.8
+          ]
+        },
+        "rotation": {
+          "$bc": "e",
+          "_": [
+            3.141592,
+            0,
+            3.141592
+          ]
+        },
+        "scale": {
+          "$bc": "v3",
+          "_": [
+            3,
+            3,
+            3
+          ]
+        },
+        "userData": {
+          "objectFlags": 6
+        },
+        "uuid": "335149db018369bc"
+      }
+    ],
+    "editorData": {
+      "sceneTree": {
+        "children": [
+          {
+            "id": "cb5131461049bd36",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "131461049bd365ad",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "31461049bd365add",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "a3271a9b619c32cf",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "0df4668824a746f1",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "a539ed81229e3689",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "22b78ccab499449b",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "86aa5270acbd335d",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "8ab625ced4062c8b",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "fb32039b777af3ca",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "c9fd7345dbb02849",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "183a6f2e5426a798",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "99601dce9c76e458",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "63380dd4a6ba6c9b",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "161f42e1e5c054c2",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "614fdcfe0a481b94",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "a8e4cf6a5ce417f2",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "cd215139826fc974",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "cb3705d3ac373272",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "03a387394ce394a6",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "2e031d877a6b5328",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "1a2cee43c947ddee",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "d28b03671e079e31",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "402255898e2daac6",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "903481e3e98a1a31",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "98171a361450ee5e",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "15a473fa85f6af86",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "a95498fc9846ba57",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "6a205cf4e5016b94",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "8d5528e456bd6cfa",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "a9058a66ecd32965",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "87b9853ff5851eb8",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "1b4b1df5b2766948",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "id": "b3ea766a063cfc1b",
+            "isExpanded": false,
+            "nodeType": "actor"
+          },
+          {
+            "children": [
+              {
+                "id": "07545b465d588ef6",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "f0acfc7754664c91",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "7927d609ef40cbd5",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "5a3b7573f7ee38f1",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "13f79caa5871cddb",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "335149db018369bc",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "8c1d87bc1ce58ed2",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "844672158510a484",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "3b6c675f9b697b43",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "0f96031eedfb6e74",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "f07746603f497a29",
+                "isExpanded": false,
+                "nodeType": "actor"
+              },
+              {
+                "id": "05bd9c7aa5ef0c5f",
+                "isExpanded": false,
+                "nodeType": "actor"
+              }
+            ],
+            "id": "folder-3c8e971a0c37ea7f",
+            "name": "Background",
+            "nodeType": "folder"
+          }
+        ],
+        "id": "f27223c73249cb51",
+        "nodeType": "scene"
+      }
+    },
+    "gameModeClass": "GAME.Action2DGameMode",
+    "postProcessConfiguration": {
+      "effects": [
+        {
+          "enabled": true,
+          "exposure": 0.5,
+          "mode": 4,
+          "type": "toneMapping"
+        }
+      ]
+    },
+    "resources": null,
+    "settings": {
+      "gameModeClass": "GAME.Action2DGameMode"
+    },
+    "uuid": "f27223c73249cb51"
+  },
+  "$version": 3
+}

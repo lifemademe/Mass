@@ -1,0 +1,116 @@
+{
+  "$root": {
+    "$bc": "GAME.EnemyActor",
+    "editorData": {},
+    "name": "Enemy Prefab",
+    "rootComponent": {
+      "$bc": "ENGINE.SceneComponent",
+      "children": [
+        {
+          "$bc": "ENGINE.ModelMeshComponent",
+          "castShadow": true,
+          "children": [],
+          "modelUrl": "@engine/assets/models/demo/SandboxAsset/Characters/SKM_Arachnids_Large_Spider.glb",
+          "name": "EnemyVisual",
+          "physicsOptions": {
+            "enabled": false
+          },
+          "prefabNodeId": "c517af3e5377f0b7"
+        },
+        {
+          "$bc": "ENGINE.AnimationStateMachineComponent",
+          "children": [],
+          "configUrl": "@project/assets/models/enemy/spider.animconfig.json",
+          "name": "EnemyAnimation",
+          "prefabNodeId": "1601215cffbb9686"
+        },
+        {
+          "$bc": "GAME.ContactDamageComponent",
+          "children": [
+            {
+              "$bc": "THREE.Mesh",
+              "name": "EnemyHurtbox",
+              "userData": {
+                "isTransient": true
+              }
+            }
+          ],
+          "geometry": {
+            "$bc": "THREE.SphereGeometry",
+            "_": [
+              0.8,
+              32,
+              16
+            ]
+          },
+          "material": {
+            "$bc": "THREE.MeshBasicMaterial",
+            "color": {
+              "$bc": "c",
+              "_": [
+                0,
+                1,
+                0
+              ]
+            },
+            "opacity": 0.5,
+            "transparent": true,
+            "wireframe": true
+          },
+          "name": "EnemyHurtbox",
+          "physicsOptions": {
+            "collisionProfile": "Trigger"
+          },
+          "position": {
+            "$bc": "v3",
+            "_": [
+              0,
+              0.4,
+              0
+            ]
+          },
+          "prefabNodeId": "c22e62244cd8c296"
+        },
+        {
+          "$bc": "ENGINE.CharacterStatsComponent",
+          "children": [],
+          "healthRegen": 0,
+          "maxHealth": 60,
+          "name": "EnemyStats",
+          "prefabNodeId": "b599516564cdee1a"
+        },
+        {
+          "$bc": "GAME.PatrolComponent",
+          "children": [],
+          "name": "EnemyPatrol",
+          "prefabNodeId": "f45e669c68987f45"
+        },
+        {
+          "$bc": "ENGINE.SoundComponent",
+          "autoPlay": true,
+          "autoPlayClipKey": "nearby",
+          "children": [],
+          "loop": true,
+          "name": "EnemyNearbySound",
+          "positional": true,
+          "prefabNodeId": "3be3b26a85903604",
+          "soundResources": [
+            {
+              "$bc": "ENGINE.SoundResource",
+              "audioPath": "@project/assets/audio/enemy-nearby.wav",
+              "distanceModel": "linear",
+              "maxDistance": 14,
+              "name": "nearby",
+              "refDistance": 2.5,
+              "rolloffFactor": 2.2,
+              "volume": 0.4
+            }
+          ]
+        }
+      ],
+      "name": "SceneComponent",
+      "prefabNodeId": "995ec64c10e774ed"
+    }
+  },
+  "$version": 2
+}

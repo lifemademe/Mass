@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "name": "hitSpark",
+  "particles": [
+    {
+      "nbParticles": 1200,
+      "gravity": [0, -8, 0],
+      "renderMode": "stretchBillboard",
+      "stretchScale": 4,
+      "intensity": 12,
+      "appearance": "circular",
+      "easeFunction": "easeOutQuad",
+      "fadeAlpha": [1, 0],
+      "fadeSize": [1, 0.05],
+      "blendingMode": "additive"
+    },
+    {
+      "nbParticles": 400,
+      "gravity": [0, 0, 0],
+      "renderMode": "billboard",
+      "intensity": 10,
+      "appearance": "circular",
+      "easeFunction": "easeOutCubic",
+      "fadeAlpha": [1, 0],
+      "fadeSize": [1, 0.2],
+      "blendingMode": "additive"
+    }
+  ],
+  "emitters": [
+    {
+      "particlesIndex": 0,
+      "loop": false,
+      "duration": 0.06,
+      "nbParticles": 42,
+      "spawnMode": "burst",
+      "delay": 0,
+      "particlesLifetime": [0.1, 0.24],
+      "startPositionMin": [-0.04, -0.04, -0.04],
+      "startPositionMax": [0.04, 0.04, 0.04],
+      "startRotationMin": [0, 0, 0],
+      "startRotationMax": [0, 0, 0],
+      "rotationSpeedMin": [0, 0, 0],
+      "rotationSpeedMax": [0, 0, 0],
+      "directionMin": [-1.2, -0.1, -0.5],
+      "directionMax": [1.2, 1.6, 0.5],
+      "size": [0.12, 0.28],
+      "speed": [6, 14],
+      "colorStart": ["#ffffff", "#fff6c8"],
+      "colorEnd": ["#ffb020", "#ff3a00"],
+      "useLocalDirection": false
+    },
+    {
+      "particlesIndex": 1,
+      "loop": false,
+      "duration": 0.04,
+      "nbParticles": 10,
+      "spawnMode": "burst",
+      "delay": 0,
+      "particlesLifetime": [0.06, 0.12],
+      "startPositionMin": [-0.02, -0.02, -0.02],
+      "startPositionMax": [0.02, 0.02, 0.02],
+      "startRotationMin": [0, 0, 0],
+      "startRotationMax": [0, 0, 0],
+      "rotationSpeedMin": [0, 0, 0],
+      "rotationSpeedMax": [0, 0, 0],
+      "directionMin": [-0.3, -0.3, -0.3],
+      "directionMax": [0.3, 0.3, 0.3],
+      "size": [0.25, 0.45],
+      "speed": [0.5, 1.5],
+      "colorStart": ["#ffffff", "#ffe080"],
+      "colorEnd": ["#ff9000", "#ff4000"],
+      "useLocalDirection": false
+    }
+  ]
+}

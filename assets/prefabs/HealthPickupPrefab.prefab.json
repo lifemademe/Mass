@@ -1,0 +1,73 @@
+{
+  "$root": {
+    "$bc": "GAME.HealthPickupActor",
+    "name": "HealthPickup_1",
+    "rootComponent": {
+      "$bc": "ENGINE.SceneComponent",
+      "children": [
+        {
+          "$bc": "ENGINE.TriggerZoneComponent",
+          "children": [
+            {
+              "$bc": "THREE.Mesh",
+              "name": "ProximityTrigger",
+              "userData": {
+                "isTransient": true
+              }
+            }
+          ],
+          "filter": "playerOnly",
+          "geometry": {
+            "$bc": "THREE.SphereGeometry",
+            "_": [
+              1,
+              12,
+              8
+            ]
+          },
+          "material": {
+            "$bc": "THREE.MeshBasicMaterial",
+            "color": {
+              "$bc": "c",
+              "_": [
+                0,
+                1,
+                0
+              ]
+            },
+            "opacity": 0.5,
+            "transparent": true,
+            "wireframe": true
+          },
+          "name": "ProximityTrigger",
+          "physicsOptions": {
+            "collisionProfile": "Trigger"
+          },
+          "prefabNodeId": "df7f3fb7729fb897",
+          "scale": {
+            "$bc": "v3",
+            "_": [
+              1.2,
+              1.2,
+              1.2
+            ]
+          }
+        },
+        {
+          "$bc": "ENGINE.ModelMeshComponent",
+          "castShadow": true,
+          "children": [],
+          "modelUrl": "@engine/assets/models/PickupActors/SM_Pickup_Health.glb",
+          "name": "HealthPickupVisual",
+          "physicsOptions": {
+            "enabled": false
+          },
+          "prefabNodeId": "f51ee85a4be26d67"
+        }
+      ],
+      "name": "SceneComponent",
+      "prefabNodeId": "356142f33fa0bd46"
+    }
+  },
+  "$version": 2
+}

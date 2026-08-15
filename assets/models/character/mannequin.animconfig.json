@@ -1,0 +1,408 @@
+{
+  "$root": {
+    "$bc": "ENGINE.AnimationConfigResource",
+    "clipOptions": {
+      "FallingBackDeath": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "FallingIdle": {
+        "loop": "LoopRepeat"
+      },
+      "FallingToLanding": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "JumpingDown": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "JumpingUp": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "LookAround": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "SwordIdle": {
+        "loop": "LoopRepeat"
+      },
+      "SwordIdleBreak": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "SwordImpact": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      },
+      "SwordRun": {
+        "loop": "LoopRepeat"
+      },
+      "SwordSlash": {
+        "clampWhenFinished": true,
+        "loop": "LoopOnce"
+      }
+    },
+    "externalAnimationSources": [
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@engine/assets/character/mannequinG.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/LookAround.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/JumpingUp.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/FallingIdle.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/FallingToLanding.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/FallingBackDeath.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/JumpingDown.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/SwordSlash.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/SwordRun.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/SwordIdle.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/SwordIdleBreak.glb"
+      },
+      {
+        "skeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json",
+        "url": "@project/assets/models/character/SwordImpact.glb"
+      }
+    ],
+    "graphEditorLayout": {
+      "graphs": {
+        "base": {
+          "anyStatePosition": {
+            "x": 400,
+            "y": 50
+          },
+          "edges": {
+            "airLoop->idle": {},
+            "airLoop->locomotion": {},
+            "attack->idle": {},
+            "attack->locomotion": {},
+            "damage->idle": {},
+            "damage->locomotion": {},
+            "die->idle": {},
+            "idle->idleBreak": {},
+            "idle->locomotion": {},
+            "idleBreak->idle": {},
+            "idleBreak->locomotion": {},
+            "jumpStart->airLoop": {},
+            "landHeavy->idle": {},
+            "landHeavy->locomotion": {},
+            "landLight->idle": {},
+            "landLight->locomotion": {},
+            "locomotion->idle": {}
+          },
+          "positions": {
+            "airLoop": {
+              "x": -405.907712,
+              "y": -251.032717
+            },
+            "attack": {
+              "x": -138.061923,
+              "y": 199.55569
+            },
+            "damage": {
+              "x": -420.18037,
+              "y": 190.058721
+            },
+            "die": {
+              "x": -132.832207,
+              "y": 97.005863
+            },
+            "idle": {
+              "x": -668.686211,
+              "y": 69.373732
+            },
+            "idleBreak": {
+              "x": -688.112174,
+              "y": -86.503808
+            },
+            "jumpStart": {
+              "x": -675.836824,
+              "y": -252.543387
+            },
+            "landHeavy": {
+              "x": -40.492994,
+              "y": -250.719737
+            },
+            "landLight": {
+              "x": -184.60426,
+              "y": -426.827121
+            },
+            "locomotion": {
+              "x": -404.255165,
+              "y": -2.791486
+            }
+          },
+          "selectedModel": "@engine/assets/character/mannequinG.glb",
+          "version": 1
+        }
+      },
+      "selectedModel": "@engine/assets/character/mannequinG.glb",
+      "version": 1
+    },
+    "initialState": "idle",
+    "events": {
+      "SwordRun": [
+        { "name": "footstep", "time": 0.15, "tag": "left" },
+        { "name": "footstep", "time": 0.55, "tag": "right" }
+      ]
+    },
+    "parameters": {
+      "dead": false,
+      "fallWeight": 1,
+      "grounded": true,
+      "idleBreak": false,
+      "moving": false,
+      "riseWeight": 0
+    },
+    "states": {
+      "airLoop": {
+        "blend": [
+          {
+            "clip": "FallingIdle",
+            "weightParam": "riseWeight"
+          },
+          {
+            "clip": "FallingIdle",
+            "weightParam": "fallWeight"
+          }
+        ],
+        "clipOptions": {},
+        "transitions": [
+          {
+            "blendDuration": 0.1,
+            "condition": {
+              "grounded": true,
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "grounded": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "attack": {
+        "clip": "SwordSlash",
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.12,
+            "condition": {
+              "dead": true
+            },
+            "to": "idle"
+          },
+          {
+            "blendDuration": 0.12,
+            "condition": {
+              "clipFinished": true,
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "damage": {
+        "clip": "SwordImpact",
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "clipFinished": true,
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.2,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "die": {
+        "clip": "FallingBackDeath",
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.2,
+            "condition": {
+              "dead": false
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "idle": {
+        "clip": "SwordIdle",
+        "clipOptions": {},
+        "transitions": [
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.25,
+            "condition": {
+              "idleBreak": true
+            },
+            "to": "idleBreak"
+          }
+        ]
+      },
+      "idleBreak": {
+        "clip": [
+          "LookAround",
+          "SwordIdleBreak"
+        ],
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.25,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "jumpStart": {
+        "clip": "JumpingUp",
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.1,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "airLoop"
+          }
+        ]
+      },
+      "landHeavy": {
+        "clip": "FallingToLanding",
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "clipFinished": true,
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.2,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "landLight": {
+        "clip": "JumpingDown",
+        "clipOptions": {
+          "loop": "LoopOnce"
+        },
+        "transitions": [
+          {
+            "blendDuration": 0.12,
+            "condition": {
+              "moving": true
+            },
+            "to": "locomotion"
+          },
+          {
+            "blendDuration": 0.15,
+            "condition": {
+              "clipFinished": true
+            },
+            "to": "idle"
+          }
+        ]
+      },
+      "locomotion": {
+        "clip": "SwordRun",
+        "clipOptions": {},
+        "transitions": [
+          {
+            "blendDuration": 0.2,
+            "condition": {
+              "moving": false
+            },
+            "to": "idle"
+          }
+        ]
+      }
+    },
+    "targetSkeletonProfile": "@engine/assets/animation-profiles/mixamo.skeleton-profile.json"
+  },
+  "$version": 2
+}

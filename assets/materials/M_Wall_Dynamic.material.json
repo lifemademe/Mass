@@ -1,0 +1,16 @@
+{
+  "$root": {
+    "$bc": "GAME.DynamicUVNodeMaterialAsset",
+    "color": {
+      "$bc": "c",
+      "_": [
+        0.730461,
+        0.730461,
+        0.730461
+      ]
+    },
+    "mapPath": "@project/assets/textures/T_Grid_10x10_White.png",
+    "scale": 0.25
+  },
+  "$version": 2
+}
